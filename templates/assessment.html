@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness Check-up - SereneSpace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #E8F4FD, #F0F8FF, #E6F3FF, #F5F9FF);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease-in-out infinite;
+            min-height: 100vh;
+            color: #2D3748;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .assessment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .assessment-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4299E1, #63B3ED);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2D3748;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            color: #4A5568;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(66, 153, 225, 0.2);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #4299E1, #63B3ED);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .question-container {
+            margin-bottom: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(66, 153, 225, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option:hover {
+            background: rgba(66, 153, 225, 0.1);
+            border-color: rgba(66, 153, 225, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, rgba(66, 153, 225, 0.15), rgba(99, 179, 237, 0.15));
+            border-color: #4299E1;
+            box-shadow: 0 5px 20px rgba(66, 153, 225, 0.2);
+        }
+
+        .option-text {
+            font-size: 1.1rem;
+            color: #2D3748;
+            font-weight: 500;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #2D3748;
+            border: 2px solid #667eea;
+            border-radius: 50px;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .question-counter {
+            color: #4A5568;
+            font-weight: 600;
+        }
+
+        .privacy-note {
+            background: linear-gradient(135deg, rgba(66, 153, 225, 0.1), rgba(99, 179, 237, 0.1));
+            border: 2px solid rgba(66, 153, 225, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .privacy-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .privacy-text {
+            color: #4A5568;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .completion-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .assessment-container {
+                margin: 10px;
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .question {
+                font-size: 1.2rem;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="assessment-container">
+        <div class="header">
+            <div class="assessment-icon">🧠</div>
+            <h1>Wellness Check-up</h1>
+            <p class="subtitle">
+                Take a moment to reflect on your well-being. This assessment is completely confidential
+                and will help you understand your current mental state.
+            </p>
+        </div>
+
+        <div class="privacy-note">
+            <div class="privacy-icon">🔒</div>
+            <div class="privacy-text">
+                <strong>Your Privacy Matters:</strong> All responses are anonymous and confidential.
+                This assessment is for your personal insight only.
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="assessmentContent">
+            <!-- Questions will be loaded here dynamically -->
+        </div>
+
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">
+                ← Previous
+            </button>
+            <div class="question-counter" id="questionCounter">Question 1 of 10</div>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>
+                Next →
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Assessment questions
+        const questions = [
+            {
+                question: "How would you rate your overall mood in the past week?",
+                options: [
+                    { text: "Very positive and upbeat", value: 4 },
+                    { text: "Generally good with some ups and downs", value: 3 },
+                    { text: "Neutral, neither particularly good nor bad", value: 2 },
+                    { text: "Often feeling down or low", value: 1 },
+                    { text: "Consistently feeling sad or depressed", value: 0 }
+                ]
+            },
+            {
+                question: "How well have you been sleeping recently?",
+                options: [
+                    { text: "Sleeping very well, feeling rested", value: 4 },
+                    { text: "Generally sleeping well with occasional restless nights", value: 3 },
+                    { text: "Average sleep, sometimes tired", value: 2 },
+                    { text: "Frequently having trouble sleeping", value: 1 },
+                    { text: "Severe sleep problems, often exhausted", value: 0 }
+                ]
+            },
+            {
+                question: "How manageable has your stress level been?",
+                options: [
+                    { text: "Very manageable, feeling in control", value: 4 },
+                    { text: "Mostly manageable with some challenging moments", value: 3 },
+                    { text: "Moderate stress, coping reasonably well", value: 2 },
+                    { text: "Often feeling overwhelmed", value: 1 },
+                    { text: "Constantly feeling extremely stressed", value: 0 }
+                ]
+            },
+            {
+                question: "How connected do you feel to friends and family?",
+                options: [
+                    { text: "Very connected and supported", value: 4 },
+                    { text: "Generally connected with good relationships", value: 3 },
+                    { text: "Somewhat connected, could be better", value: 2 },
+                    { text: "Often feeling isolated or disconnected", value: 1 },
+                    { text: "Very isolated and alone", value: 0 }
+                ]
+            },
+            {
+                question: "How motivated do you feel about your daily activities?",
+                options: [
+                    { text: "Very motivated and engaged", value: 4 },
+                    { text: "Generally motivated with occasional low periods", value: 3 },
+                    { text: "Moderate motivation, getting things done", value: 2 },
+                    { text: "Often struggling to find motivation", value: 1 },
+                    { text: "Very low motivation, hard to do basic tasks", value: 0 }
+                ]
+            },
+            {
+                question: "How often do you engage in activities you enjoy?",
+                options: [
+                    { text: "Regularly, several times a week", value: 4 },
+                    { text: "Often, at least once a week", value: 3 },
+                    { text: "Sometimes, when I have time", value: 2 },
+                    { text: "Rarely, too busy or tired", value: 1 },
+                    { text: "Almost never, lost interest", value: 0 }
+                ]
+            },
+            {
+                question: "How would you describe your energy levels?",
+                options: [
+                    { text: "High energy, feeling vibrant", value: 4 },
+                    { text: "Good energy most of the time", value: 3 },
+                    { text: "Average energy, manageable", value: 2 },
+                    { text: "Often feeling tired or drained", value: 1 },
+                    { text: "Constantly exhausted", value: 0 }
+                ]
+            },
+            {
+                question: "How well are you managing your academic/work responsibilities?",
+                options: [
+                    { text: "Very well, staying on top of everything", value: 4 },
+                    { text: "Generally well, meeting most expectations", value: 3 },
+                    { text: "Adequately, getting by", value: 2 },
+                    { text: "Struggling to keep up", value: 1 },
+                    { text: "Falling significantly behind", value: 0 }
+                ]
+            },
+            {
+                question: "How optimistic do you feel about the future?",
+                options: [
+                    { text: "Very optimistic and hopeful", value: 4 },
+                    { text: "Generally positive about what's ahead", value: 3 },
+                    { text: "Neutral, taking things as they come", value: 2 },
+                    { text: "Often worried about the future", value: 1 },
+                    { text: "Very pessimistic or hopeless", value: 0 }
+                ]
+            },
+            {
+                question: "How comfortable do you feel asking for help when needed?",
+                options: [
+                    { text: "Very comfortable, I reach out easily", value: 4 },
+                    { text: "Generally comfortable, though sometimes hesitant", value: 3 },
+                    { text: "Somewhat comfortable, depends on the situation", value: 2 },
+                    { text: "Often uncomfortable, prefer to handle things alone", value: 1 },
+                    { text: "Very uncomfortable, almost never ask for help", value: 0 }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let responses = {};
+        let totalScore = 0;
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            const content = document.getElementById('assessmentContent');
+
+            content.innerHTML = `
+                <div class="question-container">
+                    <div class="question">${question.question}</div>
+                    <div class="options" id="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption(${index}, ${option.value})" data-value="${option.value}">
+                                <div class="option-text">${option.text}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Update progress bar
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // Update question counter
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').style.display = currentQuestion > 0 ? 'block' : 'none';
+            document.getElementById('nextBtn').disabled = true;
+
+            // Restore previous selection if exists
+            if (responses[currentQuestion] !== undefined) {
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => {
+                    if (parseInt(option.dataset.value) === responses[currentQuestion]) {
+                        option.classList.add('selected');
+                        document.getElementById('nextBtn').disabled = false;
+                    }
+                });
+            }
+        }
+
+        function selectOption(optionIndex, value) {
+            // Remove previous selection
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+
+            // Add selection to clicked option
+            event.target.closest('.option').classList.add('selected');
+
+            // Store response
+            responses[currentQuestion] = value;
+
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                completeAssessment();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function completeAssessment() {
+            // Calculate total score
+            totalScore = Object.values(responses).reduce((sum, score) => sum + score, 0);
+
+            // Generate recommendations based on score
+            const recommendations = generateRecommendations(totalScore);
+
+            // Show completion message
+            document.getElementById('assessmentContent').innerHTML = `
+                <div class="completion-message">
+                    <div class="completion-icon">✨</div>
+                    <h2>Assessment Complete!</h2>
+                    <p>Thank you for taking the time to reflect on your wellness.</p>
+                    <p>Processing your responses...</p>
+                    <div class="loading"></div>
+                </div>
+            `;
+
+            document.getElementById('nextBtn').innerHTML = '<div class="loading"></div>';
+            document.getElementById('nextBtn').disabled = true;
+
+            // Submit assessment
+            setTimeout(submitAssessment, 2000);
+        }
+
+        function generateRecommendations(score) {
+            const maxScore = questions.length * 4;
+            const percentage = (score / maxScore) * 100;
+
+            if (percentage >= 75) {
+                return [
+                    "Continue your positive wellness practices",
+                    "Consider sharing your strategies with others",
+                    "Maintain regular self-check-ins"
+                ];
+            } else if (percentage >= 50) {
+                return [
+                    "Focus on stress management techniques",
+                    "Prioritize sleep and rest",
+                    "Engage in regular physical activity",
+                    "Connect with supportive friends or family"
+                ];
+            } else if (percentage >= 25) {
+                return [
+                    "Consider speaking with a counselor or therapist",
+                    "Practice daily mindfulness or meditation",
+                    "Establish a regular sleep routine",
+                    "Limit overwhelming commitments"
+                ];
+            } else {
+                return [
+                    "Seek professional mental health support",
+                    "Reach out to trusted friends or family",
+                    "Contact our crisis support line if needed",
+                    "Focus on basic self-care activities"
+                ];
+            }
+        }
+
+        function submitAssessment() {
+            const assessmentData = {
+                responses: responses,
+                score: totalScore,
+                recommendations: generateRecommendations(totalScore)
+            };
+
+            fetch('/submit-assessment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(assessmentData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        alert('There was an error submitting your assessment. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error submitting your assessment. Please try again.');
+                });
+        }
+
+        // Initialize assessment
+        document.addEventListener('DOMContentLoaded', function () {
+            loadQuestion();
+        });
+    </script>
+</body>
+
+</html>

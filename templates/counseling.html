@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Support - MindSpace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">🌟 SereneSpace</a>
+                <ul class="nav-links">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/activities">Activities</a></li>
+                    <li><a href="/community">Community</a></li>
+                    <li><a href="/counseling">Get Help</a></li>
+                    <li><a href="/emergency">Emergency</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="welcome-section">
+                <h1 class="card-title">Professional Mental Health Support</h1>
+                <p class="card-subtitle">
+                    Sometimes we all need professional guidance. Taking this step shows strength, not weakness.
+                    All consultations are completely confidential and secure.
+                </p>
+            </div>
+
+            <div
+                style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 30px; border-radius: 20px; margin: 30px 0; text-align: center;">
+                <h2 style="color: #2D3748; margin-bottom: 15px;">💙 You're taking a brave step</h2>
+                <p style="color: #4A5568; font-size: 18px; line-height: 1.6;">
+                    Seeking help is a sign of self-awareness and courage. Our trained professionals are here to support
+                    you on your journey to better mental health.
+                </p>
+            </div>
+
+            <div class="recommendations-grid">
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #E6F3FF; color: #3182CE;">
+                            💬
+                        </div>
+                        <div>
+                            <h3>Instant Chat Support</h3>
+                            <p style="color: #718096; font-size: 14px;">Available 24/7 • Anonymous option available</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px;">Connect immediately with trained counselors through secure text
+                        chat. Perfect for when you need someone to talk to right now.</p>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: #4A5568;">Average wait time:</span>
+                            <span style="color: #38A169; font-weight: 600;">2 minutes</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #4A5568;">Counselors online:</span>
+                            <span style="color: #38A169; font-weight: 600;">12 available</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="startChatCounseling()">💬 Start Chat Now</button>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #F0FFF4; color: #38A169;">
+                            📞
+                        </div>
+                        <div>
+                            <h3>Voice Call Session</h3>
+                            <p style="color: #718096; font-size: 14px;">30-60 minute sessions • Schedule or call now</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px;">Have a deeper conversation with licensed therapists and
+                        psychologists through secure voice calls.</p>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: #4A5568;">Next available slot:</span>
+                            <span style="color: #38A169; font-weight: 600;">Today 3:30 PM</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #4A5568;">Session duration:</span>
+                            <span style="color: #4A5568; font-weight: 600;">30-60 minutes</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-soft" onclick="scheduleCall()">📅 Schedule Call</button>
+                        <button class="btn btn-secondary" onclick="callNow()">📞 Call Now</button>
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #FFF5F5; color: #E53E3E;">
+                            🎥
+                        </div>
+                        <div>
+                            <h3>Video Counseling</h3>
+                            <p style="color: #718096; font-size: 14px;">Face-to-face support • By appointment</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px;">Connect face-to-face with professional counselors for a more
+                        personal therapeutic experience.</p>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: #4A5568;">Available today:</span>
+                            <span style="color: #38A169; font-weight: 600;">4 time slots</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #4A5568;">Session type:</span>
+                            <span style="color: #4A5568; font-weight: 600;">Individual therapy</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-soft" onclick="bookVideoSession()">🎥 Book Video Session</button>
+                </div>
+            </div>
+
+            <div class="card" style="margin: 40px 0;">
+                <h3 style="color: #2D3748; margin-bottom: 20px; text-align: center;">👨‍⚕️ Meet Our Counselors</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+                    <div class="counselor-card">
+                        <div class="counselor-avatar">👩‍⚕️</div>
+                        <div class="counselor-info">
+                            <h4>Dr. Sarah Chen</h4>
+                            <p class="counselor-specialty">Clinical Psychologist</p>
+                            <p class="counselor-description">Specializes in anxiety, depression, and stress management
+                                for students</p>
+                            <div class="counselor-rating">⭐⭐⭐⭐⭐ 4.9/5 (127 reviews)</div>
+                            <div class="counselor-status online">🟢 Available now</div>
+                        </div>
+                    </div>
+
+                    <div class="counselor-card">
+                        <div class="counselor-avatar">👨‍⚕️</div>
+                        <div class="counselor-info">
+                            <h4>Dr. Michael Rodriguez</h4>
+                            <p class="counselor-specialty">Licensed Therapist</p>
+                            <p class="counselor-description">Expert in academic stress, relationship issues, and life
+                                transitions</p>
+                            <div class="counselor-rating">⭐⭐⭐⭐⭐ 4.8/5 (98 reviews)</div>
+                            <div class="counselor-status busy">🟡 Next available: 2:00 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="counselor-card">
+                        <div class="counselor-avatar">👩‍⚕️</div>
+                        <div class="counselor-info">
+                            <h4>Dr. Priya Sharma</h4>
+                            <p class="counselor-specialty">Counseling Psychologist</p>
+                            <p class="counselor-description">Focuses on mindfulness, self-esteem, and emotional
+                                regulation</p>
+                            <div class="counselor-rating">⭐⭐⭐⭐⭐ 4.9/5 (156 reviews)</div>
+                            <div class="counselor-status online">🟢 Available now</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin: 40px 0;">
+                <div class="card">
+                    <h3 style="color: #2D3748; margin-bottom: 20px;">📋 Self-Assessment Tools</h3>
+                    <p style="margin-bottom: 20px; color: #4A5568;">Take these brief assessments to better understand
+                        your mental health and share results with your counselor.</p>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <button class="btn btn-soft" onclick="startAssessment('anxiety')">
+                            😰 Anxiety Screening (5 min)
+                        </button>
+                        <button class="btn btn-soft" onclick="startAssessment('depression')">
+                            😔 Depression Screening (5 min)
+                        </button>
+                        <button class="btn btn-soft" onclick="startAssessment('stress')">
+                            😵 Stress Level Assessment (3 min)
+                        </button>
+                        <button class="btn btn-soft" onclick="startAssessment('wellness')">
+                            🌟 Overall Wellness Check (7 min)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #2D3748; margin-bottom: 20px;">📚 Helpful Resources</h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="resource-item">
+                            <h4 style="color: #38A169; margin-bottom: 5px;">Preparing for Your First Session</h4>
+                            <p style="color: #4A5568; font-size: 14px;">Tips on what to expect and how to make the most
+                                of counseling</p>
+                        </div>
+                        <div class="resource-item">
+                            <h4 style="color: #38A169; margin-bottom: 5px;">Understanding Therapy Types</h4>
+                            <p style="color: #4A5568; font-size: 14px;">Learn about different therapeutic approaches and
+                                find what works for you</p>
+                        </div>
+                        <div class="resource-item">
+                            <h4 style="color: #38A169; margin-bottom: 5px;">Crisis Support Guide</h4>
+                            <p style="color: #4A5568; font-size: 14px;">What to do during a mental health emergency</p>
+                        </div>
+                        <div class="resource-item">
+                            <h4 style="color: #38A169; margin-bottom: 5px;">Building Healthy Habits</h4>
+                            <p style="color: #4A5568; font-size: 14px;">Evidence-based strategies for improving mental
+                                wellness</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="text-align: center; margin: 40px 0;">
+                <h3 style="color: #2D3748; margin-bottom: 20px;">Privacy & Security</h3>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; text-align: left;">
+                    <div style="background: #F0FFF4; padding: 20px; border-radius: 15px;">
+                        <h4 style="color: #2D7748; margin-bottom: 10px;">End-to-End Encryption</h4>
+                        <p style="color: #2D7748;">All conversations are encrypted and completely secure</p>
+                    </div>
+                    <div style="background: #E6F3FF; padding: 20px; border-radius: 15px;">
+                        <h4 style="color: #2D5A87; margin-bottom: 10px;">Confidential Records</h4>
+                        <p style="color: #2D5A87;">Your sessions are private and protected by law</p>
+                    </div>
+                    <div style="background: #FFF5F5; padding: 20px; border-radius: 15px;">
+                        <h4 style="color: #8B2635; margin-bottom: 10px;">Anonymous Options</h4>
+                        <p style="color: #8B2635;">You can receive support without sharing personal details</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <p style="color: #718096; font-size: 16px; margin-bottom: 20px;">
+                    Need immediate help or having thoughts of self-harm?
+                </p>
+                <a href="/emergency" class="btn btn-secondary"
+                    style="background: linear-gradient(135deg, #E53E3E, #C53030);">
+                    Emergency Support - Get Help Now
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function startChatCounseling() {
+            showMessage('Connecting to Chat...', 'Finding the best available counselor for you. This may take a moment.', 'info');
+
+            setTimeout(() => {
+                const counselors = ['Dr. Sarah Chen', 'Dr. Priya Sharma', 'Dr. Lisa Johnson'];
+                const randomCounselor = counselors[Math.floor(Math.random() * counselors.length)];
+
+                showMessage('Connected!', `You're now connected with ${randomCounselor}. They'll be with you shortly.`, 'success');
+
+                setTimeout(() => {
+                    openChatWindow();
+                }, 2000);
+            }, 3000);
+        }
+
+        function openChatWindow() {
+            const chatWindow = document.createElement('div');
+            chatWindow.style.cssText = `
+                position: fixed; bottom: 20px; right: 20px; width: 350px; height: 500px;
+                background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                z-index: 10000; display: flex; flex-direction: column;
+            `;
+
+            chatWindow.innerHTML = `
+                <div style="background: linear-gradient(135deg, #4299E1, #3182CE); color: white; padding: 15px; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <h4>Dr. Sarah Chen</h4>
+                    <button onclick="this.closest('div').remove()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">&times;</button>
+                </div>
+                <div style="flex: 1; padding: 15px; overflow-y: auto;" id="counselorChat">
+                    <div style="background: #F7FAFC; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                        <strong>Dr. Chen:</strong> Hello! I'm glad you reached out today. How are you feeling right now?
+                    </div>
+                </div>
+                <div style="padding: 15px; border-top: 1px solid #E2E8F0;">
+                    <input type="text" placeholder="Type your message..." style="width: 100%; padding: 8px; border: 1px solid #CBD5E0; border-radius: 8px;">
+                </div>
+            `;
+
+            document.body.appendChild(chatWindow);
+        }
+
+        function scheduleCall() {
+            const times = ['Today 3:30 PM', 'Today 5:00 PM', 'Tomorrow 10:00 AM', 'Tomorrow 2:30 PM'];
+            const randomTime = times[Math.floor(Math.random() * times.length)];
+
+            showMessage('Call Scheduled', `Your voice counseling session has been scheduled for ${randomTime}. You'll receive a confirmation email shortly.`, 'success');
+        }
+
+        function callNow() {
+            showMessage('Connecting...', 'Connecting you to an available counselor for immediate voice support.', 'info');
+
+            setTimeout(() => {
+                showMessage('Call Connected', 'You\'re now connected with Dr. Michael Rodriguez. The call will begin shortly.', 'success');
+            }, 4000);
+        }
+
+        function bookVideoSession() {
+            showMessage('Booking Session...', 'Finding available video counseling slots that match your preferences.', 'info');
+
+            setTimeout(() => {
+                showMessage('Session Booked', 'Your video counseling session is scheduled for today at 4:00 PM with Dr. Priya Sharma.', 'success');
+            }, 3000);
+        }
+
+        function startAssessment(type) {
+            const assessments = {
+                'anxiety': 'Anxiety Screening Assessment',
+                'depression': 'Depression Screening Assessment',
+                'stress': 'Stress Level Assessment',
+                'wellness': 'Overall Wellness Check'
+            };
+
+            showMessage('Starting Assessment', `Beginning the ${assessments[type]}. This will help you and your counselor better understand your current state.`, 'info');
+
+            setTimeout(() => {
+                openAssessmentModal(type);
+            }, 1500);
+        }
+
+        function openAssessmentModal(type) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.5); z-index: 10000; display: flex; 
+                justify-content: center; align-items: center;
+            `;
+
+            const questions = {
+                'anxiety': [
+                    'How often do you feel nervous, anxious, or on edge?',
+                    'How often do you have trouble relaxing?',
+                    'How often do you worry too much about different things?'
+                ],
+                'depression': [
+                    'How often do you feel down, depressed, or hopeless?',
+                    'How often do you have little interest or pleasure in activities?',
+                    'How often do you have trouble with sleep or appetite?'
+                ],
+                'stress': [
+                    'How overwhelmed do you feel with your current responsibilities?',
+                    'How often do you feel unable to cope with daily pressures?',
+                    'How much is stress affecting your daily life?'
+                ],
+                'wellness': [
+                    'How would you rate your overall mental health?',
+                    'How satisfied are you with your current life situation?',
+                    'How well are you managing your emotions lately?'
+                ]
+            };
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 500px; width: 90%;">
+                    <h3 style="margin-bottom: 20px; color: #2D3748;">Assessment Question 1 of 3</h3>
+                    <p style="margin-bottom: 20px; font-size: 16px;">${questions[type][0]}</p>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                        <label style="cursor: pointer;"><input type="radio" name="q1" value="0"> Never</label>
+                        <label style="cursor: pointer;"><input type="radio" name="q1" value="1"> Sometimes</label>
+                        <label style="cursor: pointer;"><input type="radio" name="q1" value="2"> Often</label>
+                        <label style="cursor: pointer;"><input type="radio" name="q1" value="3"> Very Often</label>
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button onclick="this.closest('div').remove()" style="padding: 10px 20px; background: #CBD5E0; border: none; border-radius: 8px; cursor: pointer;">Cancel</button>
+                        <button onclick="completeAssessment('${type}', this)" style="padding: 10px 20px; background: #3182CE; color: white; border: none; border-radius: 8px; cursor: pointer;">Next</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        function completeAssessment(type, button) {
+            const modal = button.closest('div').parentElement;
+            modal.remove();
+
+            setTimeout(() => {
+                const results = {
+                    'anxiety': 'Your assessment indicates mild to moderate anxiety levels. Consider speaking with a counselor about coping strategies.',
+                    'depression': 'Your responses suggest you may benefit from professional support. A counselor can help you develop effective strategies.',
+                    'stress': 'You\'re experiencing significant stress. Learning stress management techniques could be very helpful.',
+                    'wellness': 'Your overall wellness shows some areas that could benefit from attention. A counselor can help you develop a plan.'
+                };
+
+                showMessage('Assessment Complete', results[type], 'info');
+            }, 1000);
+        }
+
+        function showMessage(title, message, type) {
+            const colors = {
+                'success': 'linear-gradient(135deg, #48BB78, #38A169)',
+                'info': 'linear-gradient(135deg, #4299E1, #3182CE)',
+                'warning': 'linear-gradient(135deg, #ED8936, #DD6B20)'
+            };
+
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: ${colors[type] || colors['info']};
+                color: white; padding: 20px; border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 350px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+
+            messageDiv.innerHTML = `
+                <h4 style="margin-bottom: 8px; font-size: 16px;">${title}</h4>
+                <p style="opacity: 0.9; font-size: 14px; line-height: 1.4;">${message}</p>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.remove();
+                style.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>

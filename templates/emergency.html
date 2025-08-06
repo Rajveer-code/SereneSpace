@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Support - MindSpace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles to ensure proper display */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fecfef, #ff9a9e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #6B73FF;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #6B73FF;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6B73FF, #9F7AEA);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #38A169, #68D391);
+            color: white;
+        }
+
+        .btn-soft {
+            background: #F7FAFC;
+            color: #4A5568;
+            border: 1px solid #E2E8F0;
+        }
+
+        .emergency-hero {
+            margin-bottom: 40px;
+        }
+
+        .hotline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .hotline-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hotline-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .hotline-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hotline-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 10px;
+        }
+
+        .hotline-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #E53E3E;
+            margin-bottom: 5px;
+        }
+
+        .hotline-hours {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .coping-strategy {
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hotline-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .emergency-hero .card {
+                padding: 20px;
+            }
+
+            .emergency-hero h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">🌟 SereneSpace</a>
+                <ul class="nav-links">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/activities">Activities</a></li>
+                    <li><a href="/community">Community</a></li>
+                    <li><a href="/counseling">Get Help</a></li>
+                    <li><a href="/emergency">Emergency</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="emergency-hero">
+                <div class="card"
+                    style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; text-align: center;">
+                    <h1 style="font-size: 32px; margin-bottom: 20px;">🚨 You Are Not Alone</h1>
+                    <p style="font-size: 20px; opacity: 0.9; margin-bottom: 25px;">
+                        If you're having thoughts of self-harm or suicide, please reach out immediately.
+                        Help is available 24/7 and you matter.
+                    </p>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        <a href="tel:1800599019" class="btn"
+                            style="background: white; color: #ee5a24; font-size: 18px; padding: 15px 30px;">
+                            📞 Call Now: 1800-599-019
+                        </a>
+                        <button onclick="startEmergencyChat()" class="btn"
+                            style="background: rgba(255,255,255,0.2); border: 2px solid white; color: white; font-size: 18px; padding: 15px 30px;">
+                            💬 Emergency Chat
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="text-align: center; margin: 40px 0; padding: 30px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 20px;">
+                <h2 style="color: #2D3748; margin-bottom: 15px;">💙 Crisis Resources Available Right Now</h2>
+                <p style="color: #4A5568; font-size: 18px;">Professional counselors are standing by to help you through
+                    this difficult time.</p>
+            </div>
+
+            <div class="hotline-grid">
+                <div class="hotline-card">
+                    <div class="hotline-icon">🇮🇳</div>
+                    <div class="hotline-name">Kiran Mental Health Helpline</div>
+                    <div class="hotline-number">1800-599-0019</div>
+                    <div class="hotline-hours">Available 24/7 • Toll Free</div>
+                    <p style="color: #4A5568; font-size: 14px; margin-top: 10px;">
+                        Confidential support in multiple languages
+                    </p>
+                    <button onclick="callHelpline('1800-599-0019')" class="btn btn-soft" style="margin-top: 15px;">
+                        📞 Call Now
+                    </button>
+                </div>
+
+                <div class="hotline-card">
+                    <div class="hotline-icon">🆘</div>
+                    <div class="hotline-name">Suicide Prevention India</div>
+                    <div class="hotline-number">022-2754-6669</div>
+                    <div class="hotline-hours">24/7 Crisis Support</div>
+                    <p style="color: #4A5568; font-size: 14px; margin-top: 10px;">
+                        Specialized suicide prevention counseling
+                    </p>
+                    <button onclick="callHelpline('022-2754-6669')" class="btn btn-soft" style="margin-top: 15px;">
+                        📞 Call Now
+                    </button>
+                </div>
+
+                <div class="hotline-card">
+                    <div class="hotline-icon">💬</div>
+                    <div class="hotline-name">iCall - Tata Institute</div>
+                    <div class="hotline-number">9152987821</div>
+                    <div class="hotline-hours">Mon-Sat 8AM-10PM</div>
+                    <p style="color: #4A5568; font-size: 14px; margin-top: 10px;">
+                        Email counseling also available
+                    </p>
+                    <button onclick="callHelpline('9152987821')" class="btn btn-soft" style="margin-top: 15px;">
+                        📞 Call Now
+                    </button>
+                </div>
+
+                <div class="hotline-card">
+                    <div class="hotline-icon">🏥</div>
+                    <div class="hotline-name">NIMHANS Helpline</div>
+                    <div class="hotline-number">080-46110007</div>
+                    <div class="hotline-hours">24/7 Mental Health Support</div>
+                    <p style="color: #4A5568; font-size: 14px; margin-top: 10px;">
+                        Professional psychiatric support
+                    </p>
+                    <button onclick="callHelpline('080-46110007')" class="btn btn-soft" style="margin-top: 15px;">
+                        📞 Call Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="color: #2D3748; text-align: center; margin-bottom: 30px;">🛡️ Immediate Coping Strategies
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                    <div class="coping-strategy">
+                        <div style="background: #E6F3FF; padding: 20px; border-radius: 15px;">
+                            <h4 style="color: #3182CE; margin-bottom: 15px;">🫁 Breathing Exercise</h4>
+                            <p style="color: #4A5568; margin-bottom: 15px;">Take slow, deep breaths to calm your nervous
+                                system</p>
+                            <button onclick="startEmergencyBreathing()" class="btn btn-soft">
+                                Start 2-Minute Breathing
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="coping-strategy">
+                        <div style="background: #F0FFF4; padding: 20px; border-radius: 15px;">
+                            <h4 style="color: #38A169; margin-bottom: 15px;">🌍 Grounding Technique</h4>
+                            <p style="color: #4A5568; margin-bottom: 15px;">5 things you can see, 4 you can touch, 3 you
+                                can hear</p>
+                            <button onclick="startGroundingExercise()" class="btn btn-soft">
+                                Start Grounding
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="coping-strategy">
+                        <div style="background: #FFF5F5; padding: 20px; border-radius: 15px;">
+                            <h4 style="color: #E53E3E; margin-bottom: 15px;">🤗 Safe Person</h4>
+                            <p style="color: #4A5568; margin-bottom: 15px;">Reach out to someone you trust right now</p>
+                            <button onclick="showContactSuggestions()" class="btn btn-soft">
+                                Find Support Person
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="background: #F0FFF4;">
+                <h3 style="color: #2D7748; text-align: center; margin-bottom: 20px;">✨ Remember These Important Things
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 36px; margin-bottom: 10px;">💙</div>
+                        <h4 style="color: #2D7748; margin-bottom: 8px;">You Matter</h4>
+                        <p style="color: #4A5568;">Your life has value and meaning, even when it doesn't feel that way
+                        </p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 36px; margin-bottom: 10px;">🌅</div>
+                        <h4 style="color: #2D7748; margin-bottom: 8px;">This Will Pass</h4>
+                        <p style="color: #4A5568;">Difficult feelings are temporary, even when they feel overwhelming
+                        </p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 36px; margin-bottom: 10px;">🤝</div>
+                        <h4 style="color: #2D7748; margin-bottom: 8px;">Help Is Available</h4>
+                        <p style="color: #4A5568;">Professional support is just a phone call away, 24/7</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="/counseling" class="btn btn-primary" style="font-size: 18px; padding: 15px 30px;">
+                    💬 Schedule Professional Counseling
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function callHelpline(number) {
+            if (confirm(`This will call ${number}. Are you ready to speak with a crisis counselor?`)) {
+                window.location.href = `tel:${number}`;
+            }
+        }
+
+        function startEmergencyChat() {
+            showMessage('🚨 Connecting to Emergency Chat', 'Connecting you with a crisis counselor immediately. Please hold on.', 'info');
+
+            setTimeout(() => {
+                openEmergencyChatWindow();
+            }, 2000);
+        }
+
+        function openEmergencyChatWindow() {
+            const chatWindow = document.createElement('div');
+            chatWindow.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                width: 90%; max-width: 450px; height: 70vh; max-height: 600px;
+                background: white; border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+                z-index: 10000; display: flex; flex-direction: column;
+            `;
+
+            chatWindow.innerHTML = `
+                <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 20px; border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <h4>🆘 Crisis Counselor - Sarah</h4>
+                    <button onclick="this.closest('div').remove()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">&times;</button>
+                </div>
+                <div style="flex: 1; padding: 20px; overflow-y: auto;" id="emergencyChat">
+                    <div style="background: #F0FFF4; padding: 15px; border-radius: 15px; margin-bottom: 15px;">
+                        <strong>Crisis Counselor Sarah:</strong> Hello, I'm Sarah, a trained crisis counselor. I'm here to listen and support you. You're safe here. Can you tell me how you're feeling right now?
+                    </div>
+                </div>
+                <div style="padding: 20px; border-top: 1px solid #E2E8F0;">
+                    <input type="text" placeholder="Type your message..." style="width: 100%; padding: 12px; border: 2px solid #E2E8F0; border-radius: 25px; font-size: 16px;">
+                    <p style="font-size: 12px; color: #718096; margin-top: 8px; text-align: center;">
+                        This is a safe, confidential space. Everything you share is private.
+                    </p>
+                </div>
+            `;
+
+            document.body.appendChild(chatWindow);
+        }
+
+        function startEmergencyBreathing() {
+            window.location.href = '/breathing-exercise?emergency=true';
+        }
+
+        function startGroundingExercise() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
+                justify-content: center; align-items: center;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 25px; max-width: 500px; text-align: center;">
+                    <h3 style="margin-bottom: 25px; color: #2D3748;">🌍 5-4-3-2-1 Grounding Exercise</h3>
+                    <div id="groundingStep" style="font-size: 20px; color: #4A5568; margin-bottom: 30px;">
+                        Look around you and name 5 things you can see
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="this.closest('div').remove()" style="padding: 12px 25px; background: #E2E8F0; border: none; border-radius: 25px; cursor: pointer;">Close</button>
+                        <button onclick="nextGroundingStep()" style="padding: 12px 25px; background: #38A169; color: white; border: none; border-radius: 25px; cursor: pointer;">Next Step</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            window.groundingModal = modal;
+            window.groundingStepIndex = 0;
+        }
+
+        let groundingSteps = [
+            "Look around you and name 5 things you can see",
+            "Now touch and name 4 things you can feel",
+            "Listen carefully and name 3 things you can hear",
+            "Think of 2 things you can smell",
+            "Name 1 thing you can taste",
+            "Take a deep breath. You are present and safe. 🌟"
+        ];
+
+        function nextGroundingStep() {
+            window.groundingStepIndex++;
+            if (window.groundingStepIndex < groundingSteps.length) {
+                document.getElementById('groundingStep').textContent = groundingSteps[window.groundingStepIndex];
+            } else {
+                window.groundingModal.remove();
+                showMessage('✨ Grounding Complete', 'You did great! Notice how you feel more present and calm now.', 'success');
+            }
+        }
+
+        function showContactSuggestions() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.5); z-index: 10000; display: flex; 
+                justify-content: center; align-items: center;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 400px;">
+                    <h3 style="margin-bottom: 20px; color: #2D3748; text-align: center;">🤗 Reach Out to Someone Safe</h3>
+                    <div style="margin-bottom: 20px;">
+                        <p style="color: #4A5568; margin-bottom: 15px;">Consider contacting:</p>
+                        <ul style="color: #4A5568; line-height: 1.8;">
+                            <li>A trusted friend or family member</li>
+                            <li>Your college counselor</li>
+                            <li>A teacher or mentor you trust</li>
+                            <li>A mental health professional</li>
+                            <li>A crisis helpline (numbers above)</li>
+                        </ul>
+                    </div>
+                    <div style="text-align: center;">
+                        <button onclick="this.closest('div').remove()" style="padding: 12px 25px; background: #3182CE; color: white; border: none; border-radius: 15px; cursor: pointer;">I'll Reach Out</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        function showMessage(title, message, type) {
+            const colors = {
+                'success': 'linear-gradient(135deg, #48BB78, #38A169)',
+                'info': 'linear-gradient(135deg, #4299E1, #3182CE)',
+                'warning': 'linear-gradient(135deg, #ED8936, #DD6B20)'
+            };
+
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: ${colors[type] || colors['info']};
+                color: white; padding: 20px; border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 350px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+
+            messageDiv.innerHTML = `
+                <h4 style="margin-bottom: 8px; font-size: 16px;">${title}</h4>
+                <p style="opacity: 0.9; font-size: 14px; line-height: 1.4;">${message}</p>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.remove();
+                style.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>
