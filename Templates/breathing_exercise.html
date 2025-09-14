@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercise - MindSpace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">🌟 MindSpace</a>
+                <ul class="nav-links">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/activities">Activities</a></li>
+                    <li><a href="/community">Community</a></li>
+                    <li><a href="/counseling">Get Help</a></li>
+                    <li><a href="/emergency">Emergency</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="breathing-container">
+        <div class="container">
+            <div class="card fade-in-up" style="text-align: center; max-width: 500px; margin: 0 auto;">
+                <h1 style="color: #2D3748; margin-bottom: 15px;">🌬️ Guided Breathing</h1>
+                <p style="color: #4A5568; margin-bottom: 30px;">
+                    Take a moment to center yourself. Follow the rhythm of the circle and breathe naturally.
+                </p>
+
+                <div class="breathing-circle" id="breathingCircle">
+                    <div class="breathing-text" id="breathingText">Get Ready</div>
+                </div>
+
+                <div class="breathing-instructions" id="instructions">
+                    <p>Find a comfortable position and click "Start" when you're ready.</p>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <button id="startBtn" class="btn btn-primary" style="font-size: 18px; padding: 15px 30px;">
+                        🌱 Start Breathing Exercise
+                    </button>
+                    <button id="pauseBtn" class="btn btn-secondary" style="display: none; margin-left: 15px;">
+                        ⏸️ Pause
+                    </button>
+                    <button id="resetBtn" class="btn btn-soft" style="display: none; margin-left: 15px;">
+                        🔄 Reset
+                    </button>
+                </div>
+
+                <div id="progressSection" style="display: none; margin: 25px 0;">
+                    <div style="background: #F7FAFC; padding: 20px; border-radius: 15px;">
+                        <h4 style="color: #2D3748; margin-bottom: 15px;">Session Progress</h4>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="color: #4A5568;">Breaths completed:</span>
+                            <span id="breathCount" style="color: #6B73FF; font-weight: 600;">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="color: #4A5568;">Time elapsed:</span>
+                            <span id="timeElapsed" style="color: #6B73FF; font-weight: 600;">0:00</span>
+                        </div>
+                        <div style="background: #E6F3FF; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div id="progressBar"
+                                style="background: #6B73FF; height: 100%; width: 0%; transition: width 0.3s ease;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 30px 0; padding: 20px; background: #F0FFF4; border-radius: 15px;">
+                    <h4 style="color: #2D7748; margin-bottom: 15px;">✨ Benefits of Deep Breathing</h4>
+                    <ul style="text-align: left; color: #2D7748; line-height: 1.6;">
+                        <li>Reduces stress and anxiety</li>
+                        <li>Lowers blood pressure</li>
+                        <li>Improves focus and concentration</li>
+                        <li>Promotes better sleep</li>
+                        <li>Boosts mood and emotional well-being</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="/dashboard" class="btn btn-soft">
+                        ← Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let isBreathing = false;
+        let breathingInterval;
+        let breathCount = 0;
+        let startTime;
+        let timeInterval;
+        let isPaused = false;
+        let currentPhase = 'inhale'; // 'inhale', 'hold', 'exhale', 'pause'
+        let cycleProgress = 0;
+
+        const breathingCircle = document.getElementById('breathingCircle');
+        const breathingText = document.getElementById('breathingText');
+        const instructions = document.getElementById('instructions');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressSection = document.getElementById('progressSection');
+        const breathCountEl = document.getElementById('breathCount');
+        const timeElapsedEl = document.getElementById('timeElapsed');
+        const progressBar = document.getElementById('progressBar');
+
+        // Breathing pattern: 4-4-4-4 (inhale-hold-exhale-pause)
+        const breathingPattern = {
+            inhale: 4000,
+            hold: 2000,
+            exhale: 4000,
+            pause: 2000
+        };
+
+        const phases = ['inhale', 'hold', 'exhale', 'pause'];
+        let currentPhaseIndex = 0;
+
+        startBtn.addEventListener('click', startBreathing);
+        pauseBtn.addEventListener('click', togglePause);
+        resetBtn.addEventListener('click', resetExercise);
+
+        function startBreathing() {
+            if (!isBreathing && !isPaused) {
+                // First time starting
+                isBreathing = true;
+                startTime = Date.now();
+                progressSection.style.display = 'block';
+
+                startBtn.style.display = 'none';
+                pauseBtn.style.display = 'inline-flex';
+                resetBtn.style.display = 'inline-flex';
+
+                instructions.innerHTML = '<p>Follow the circle and breathe naturally. Focus on your breath.</p>';
+
+                startTimeTracking();
+                runBreathingCycle();
+            } else if (isPaused) {
+                // Resuming from pause
+                isPaused = false;
+                pauseBtn.innerHTML = '⏸️ Pause';
+                startTimeTracking();
+                runBreathingCycle();
+            }
+        }
+
+        function togglePause() {
+            if (!isPaused) {
+                // Pause
+                isPaused = true;
+                clearInterval(breathingInterval);
+                clearInterval(timeInterval);
+                pauseBtn.innerHTML = '▶️ Resume';
+                breathingText.textContent = 'Paused';
+                breathingCircle.classList.remove('inhale', 'exhale');
+            } else {
+                // Resume
+                startBreathing();
+            }
+        }
+
+        function resetExercise() {
+            isBreathing = false;
+            isPaused = false;
+            breathCount = 0;
+            currentPhaseIndex = 0;
+            cycleProgress = 0;
+
+            clearInterval(breathingInterval);
+            clearInterval(timeInterval);
+
+            // Reset UI
+            startBtn.style.display = 'inline-flex';
+            pauseBtn.style.display = 'none';
+            resetBtn.style.display = 'none';
+            progressSection.style.display = 'none';
+
+            breathingText.textContent = 'Get Ready';
+            instructions.innerHTML = '<p>Find a comfortable position and click "Start" when you\'re ready.</p>';
+            breathingCircle.classList.remove('inhale', 'exhale');
+
+            breathCountEl.textContent = '0';
+            timeElapsedEl.textContent = '0:00';
+            progressBar.style.width = '0%';
+        }
+
+        function runBreathingCycle() {
+            if (!isBreathing || isPaused) return;
+
+            const currentPhaseName = phases[currentPhaseIndex];
+            const phaseDuration = breathingPattern[currentPhaseName];
+
+            // Update UI for current phase
+            updateBreathingUI(currentPhaseName);
+
+            breathingInterval = setTimeout(() => {
+                if (!isPaused && isBreathing) {
+                    currentPhaseIndex = (currentPhaseIndex + 1) % phases.length;
+
+                    // Complete cycle when we return to inhale
+                    if (currentPhaseIndex === 0) {
+                        breathCount++;
+                        breathCountEl.textContent = breathCount;
+                        updateProgressBar();
+                    }
+
+                    runBreathingCycle();
+                }
+            }, phaseDuration);
+        }
+
+        function updateBreathingUI(phase) {
+            breathingCircle.classList.remove('inhale', 'exhale');
+
+            switch (phase) {
+                case 'inhale':
+                    breathingText.textContent = 'Breathe In';
+                    breathingCircle.classList.add('inhale');
+                    instructions.innerHTML = '<p>Slowly breathe in through your nose...</p>';
+                    break;
+                case 'hold':
+                    breathingText.textContent = 'Hold';
+                    instructions.innerHTML = '<p>Hold your breath gently...</p>';
+                    break;
+                case 'exhale':
+                    breathingText.textContent = 'Breathe Out';
+                    breathingCircle.classList.add('exhale');
+                    instructions.innerHTML = '<p>Slowly breathe out through your mouth...</p>';
+                    break;
+                case 'pause':
+                    breathingText.textContent = 'Rest';
+                    instructions.innerHTML = '<p>Rest naturally before the next breath...</p>';
+                    break;
+            }
+        }
+
+        function startTimeTracking() {
+            timeInterval = setInterval(() => {
+                if (!isPaused && isBreathing) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    timeElapsedEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function updateProgressBar() {
+            // Progress based on completed breaths (target: 10 breaths = 100%)
+            const targetBreaths = 10;
+            const progress = Math.min((breathCount / targetBreaths) * 100, 100);
+            progressBar.style.width = `${progress}%`;
+
+            // Show completion message
+            if (breathCount >= targetBreaths) {
+                setTimeout(() => {
+                    showCompletionMessage();
+                }, 1000);
+            }
+        }
+
+        function showCompletionMessage() {
+            const completionDiv = document.createElement('div');
+            completionDiv.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #48BB78, #38A169);
+                color: white; padding: 40px; border-radius: 20px; text-align: center;
+                box-shadow: 0 15px 50px rgba(0,0,0,0.3); z-index: 10000;
+                max-width: 400px; animation: celebrationPulse 0.6s ease-out;
+            `;
+
+            completionDiv.innerHTML = `
+                <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
+                <h3 style="margin-bottom: 15px; font-size: 24px;">Excellent Work!</h3>
+                <p style="opacity: 0.9; line-height: 1.6; margin-bottom: 25px;">
+                    You've completed a full breathing session! You should feel more relaxed and centered now.
+                    Take a moment to notice how your body feels.
+                </p>
+                <button onclick="this.parentElement.remove()" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;">
+                    ✨ Continue Feeling Great
+                </button>
+            `;
+
+            // Add celebration animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes celebrationPulse {
+                    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+                    50% { transform: translate(-50%, -50%) scale(1.05); }
+                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(completionDiv);
+
+            // Auto-close after 10 seconds
+            setTimeout(() => {
+                if (document.body.contains(completionDiv)) {
+                    completionDiv.remove();
+                    style.remove();
+                }
+            }, 10000);
+        }
+
+        // Add gentle background sound option
+        document.addEventListener('DOMContentLoaded', function () {
+            // Create subtle background sound toggle
+            const soundToggle = document.createElement('div');
+            soundToggle.style.cssText = `
+                position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+                background: rgba(255,255,255,0.9); padding: 15px; border-radius: 50px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1); cursor: pointer;
+                transition: all 0.3s ease;
+            `;
+            soundToggle.innerHTML = '🔇';
+            soundToggle.title = 'Toggle background sounds';
+
+            let soundEnabled = false;
+            soundToggle.addEventListener('click', function () {
+                soundEnabled = !soundEnabled;
+                this.innerHTML = soundEnabled ? '🔊' : '🔇';
+                this.title = soundEnabled ? 'Turn off background sounds' : 'Turn on background sounds';
+
+                if (soundEnabled) {
+                    // In a real app, you'd play ambient sounds here
+                    showMessage('🎵 Background Sounds', 'Calming sounds are now playing softly in the background', 'info');
+                }
+            });
+
+            document.body.appendChild(soundToggle);
+        });
+
+        function showMessage(title, message, type) {
+            const colors = {
+                'success': 'linear-gradient(135deg, #48BB78, #38A169)',
+                'info': 'linear-gradient(135deg, #4299E1, #3182CE)',
+                'warning': 'linear-gradient(135deg, #ED8936, #DD6B20)'
+            };
+
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: ${colors[type] || colors['info']};
+                color: white; padding: 20px; border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 300px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+
+            messageDiv.innerHTML = `
+                <h4 style="margin-bottom: 8px; font-size: 16px;">${title}</h4>
+                <p style="opacity: 0.9; font-size: 14px; line-height: 1.4;">${message}</p>
+            `;
+
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => messageDiv.remove(), 3000);
+        }
+    </script>
+</body>
+
+</html>

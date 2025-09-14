@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - SereneSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0eff4;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Brand Header */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+    }
+
+    .logo {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #4a4a4a;
+      text-shadow: none;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .logo i {
+      font-size: 3rem;
+      color: #7f56d9;
+    }
+
+    .brand-subtitle {
+      color: #666;
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+
+    /* Dashboard Welcome */
+    .dashboard-welcome {
+      background: #ffffff;
+      border-radius: 25px;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+      margin-bottom: 3rem;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .dashboard-welcome h1 {
+      font-size: 2.5rem;
+      color: #6941c6;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .dashboard-welcome p {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    .dashboard-stats {
+      display: inline-block;
+      background: linear-gradient(135deg, #7f56d9, #6941c6);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-weight: 500;
+      box-shadow: 0 8px 25px rgba(127, 86, 217, 0.3);
+    }
+
+    /* Stats Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #7f56d9, #6941c6);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card h3 {
+      color: #6941c6;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .stat-card .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #7f56d9;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 10px rgba(127, 86, 217, 0.2);
+    }
+
+    .stat-card .stat-label {
+      color: #666;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      background: #ffffff;
+      padding: 1.5rem 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #4a4a4a;
+      font-weight: 600;
+      text-shadow: none;
+    }
+
+    #timeRange {
+      background: #f0eff4;
+      border: 1px solid #ddd;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #timeRange:hover {
+      background: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .quick-action-btn {
+      background: linear-gradient(135deg, #7f56d9, #6941c6);
+      color: white;
+      padding: 2rem;
+      border-radius: 20px;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(127, 86, 217, 0.3);
+    }
+
+    .quick-action-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(127, 86, 217, 0.4);
+    }
+
+    .quick-action-btn i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .quick-action-btn span {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      background: #ffffff;
+      padding: 3rem;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+      margin: 3rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* Recent Activity */
+    .recent-activity {
+      background: #ffffff;
+      padding: 3rem;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+      margin: 3rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      gap: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .activity-item:hover {
+      transform: translateX(10px);
+      background: rgba(127, 86, 217, 0.05);
+      border-radius: 10px;
+      margin: 0 -1rem;
+      padding: 1.5rem 1rem;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-icon.chat {
+      background: linear-gradient(135deg, #7f56d9, #6941c6);
+      color: white;
+    }
+
+    .activity-icon.user {
+      background: linear-gradient(135deg, #48b8d0, #0096c7);
+      color: white;
+    }
+
+    .activity-icon.alert {
+      background: linear-gradient(135deg, #e63946, #d62828);
+      color: white;
+    }
+
+    .activity-content h4 {
+      margin: 0 0 0.5rem 0;
+      color: #333;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .activity-content p {
+      margin: 0;
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Buttons */
+    .btn {
+      background: #6941c6;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .btn:hover {
+      background: #5632a8;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(105, 65, 198, 0.3);
+    }
+
+    /* Footer */
+    .footer {
+      background: transparent;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    .footer p {
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .logo {
+        font-size: 2rem;
+      }
+
+      .logo i {
+        font-size: 2rem;
+      }
+
+      .dashboard-welcome {
+        padding: 2rem;
+      }
+
+      .dashboard-welcome h1 {
+        font-size: 1.8rem;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="brand-header">
+      <div class="logo">
+        <i class="fa-solid fa-leaf"></i>
+        SereneSpace
+      </div>
+      <div class="brand-subtitle">Mental Health & Wellness Platform</div>
+    </div>
+
+    <div class="dashboard-welcome">
+      <h1>Welcome back, <span>{{ session['admin_user'] }}</span></h1>
+      <p>Here's what's happening with SereneSpace today</p>
+      <div class="dashboard-stats">
+        <i class="fa-solid fa-clock"></i>
+        <span id="currentTime"></span>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> Overview Statistics</h2>
+      <select id="timeRange">
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+      </select>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-users"></i> Active Users</h3>
+        <div class="stat-number" id="activeUsers">1,247</div>
+        <div class="stat-label">Currently online</div>
+      </div>
+
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-comments"></i> AI Chat Sessions</h3>
+        <div class="stat-number" id="chatSessions">856</div>
+        <div class="stat-label">Sessions today</div>
+      </div>
+
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-heart"></i> Wellness Check-ins</h3>
+        <div class="stat-number" id="checkIns">432</div>
+        <div class="stat-label">Completed today</div>
+      </div>
+
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-exclamation-triangle"></i> Crisis Interventions</h3>
+        <div class="stat-number" id="crisisCount">3</div>
+        <div class="stat-label">Requiring attention</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>
+    </div>
+
+    <div class="quick-actions">
+      <a href="#broadcast" class="quick-action-btn">
+        <i class="fa-solid fa-bullhorn"></i>
+        <span>Send Broadcast</span>
+      </a>
+      <a href="#add-resource" class="quick-action-btn">
+        <i class="fa-solid fa-plus-circle"></i>
+        <span>Add Resource</span>
+      </a>
+      <a href="#view-reports" class="quick-action-btn">
+        <i class="fa-solid fa-chart-bar"></i>
+        <span>Generate Report</span>
+      </a>
+      <a href="#crisis-alerts" class="quick-action-btn" style="background: linear-gradient(135deg, #e63946, #d62828);">
+        <i class="fa-solid fa-exclamation-triangle"></i>
+        <span>Crisis Alerts</span>
+      </a>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title"><i class="fa-solid fa-analytics"></i> Usage Analytics</h2>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="usageChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title"><i class="fa-solid fa-clock"></i> Recent Activity</h2>
+      <a href="#view-all" class="btn">View All</a>
+    </div>
+
+    <div class="recent-activity">
+      <div class="activity-item">
+        <div class="activity-icon chat">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="activity-content">
+          <h4>AI Chat Session Completed</h4>
+          <p>Anonymous user completed stress management session • 5 minutes ago</p>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon user">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <div class="activity-content">
+          <h4>New User Registration</h4>
+          <p>Student from Engineering Department joined • 12 minutes ago</p>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon alert">
+          <i class="fa-solid fa-exclamation-triangle"></i>
+        </div>
+        <div class="activity-content">
+          <h4>Crisis Alert Resolved</h4>
+          <p>Emergency intervention successfully completed • 1 hour ago</p>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon chat">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <div class="activity-content">
+          <h4>Forum Activity Spike</h4>
+          <p>Peer support forum seeing increased engagement • 2 hours ago</p>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon user">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <div class="activity-content">
+          <h4>Wellness Check-in Milestone</h4>
+          <p>1000+ daily check-ins completed this week • 3 hours ago</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title"><i class="fa-solid fa-server"></i> System Health</h2>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-server"></i> Server Status</h3>
+        <div class="stat-number" style="color: #52b788;">99.9%</div>
+        <div class="stat-label">Uptime</div>
+      </div>
+
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-database"></i> Database</h3>
+        <div class="stat-number" style="color: #48b8d0;">Healthy</div>
+        <div class="stat-label">All systems operational</div>
+      </div>
+
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-shield-alt"></i> Security</h3>
+        <div class="stat-number" style="color: #f77f00;">Active</div>
+        <div class="stat-label">No threats detected</div>
+      </div>
+
+      <div class="stat-card">
+        <h3><i class="fa-solid fa-backup"></i> Backups</h3>
+        <div class="stat-number" style="color: #7f56d9;">Latest</div>
+        <div class="stat-label">2 hours ago</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2025 SereneSpace | Dept. of Student Welfare</p>
+      <p><i class="fa-solid fa-phone"></i> Emergency Helpline: 1800-123-456</p>
+    </div>
+  </div>
+
+  <script>
+    // Update current time
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      document.getElementById('currentTime').textContent = timeString;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Animate counters
+    function animateCounter(elementId, targetValue) {
+      const element = document.getElementById(elementId);
+      const startValue = 0;
+      const duration = 2000;
+      const increment = targetValue / (duration / 16);
+      let currentValue = startValue;
+
+      const timer = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= targetValue) {
+          element.textContent = targetValue.toLocaleString();
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(currentValue).toLocaleString();
+        }
+      }, 16);
+    }
+
+    // Initialize counters when page loads
+    document.addEventListener('DOMContentLoaded', function () {
+      animateCounter('activeUsers', 1247);
+      animateCounter('chatSessions', 856);
+      animateCounter('checkIns', 432);
+      animateCounter('crisisCount', 3);
+    });
+
+    // Usage Analytics Chart
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    const usageChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'AI Chat Sessions',
+          data: [120, 190, 300, 500, 200, 300, 450],
+          borderColor: '#7f56d9',
+          /* Purple */
+          backgroundColor: 'rgba(127, 86, 217, 0.1)',
+          /* Purple */
+          tension: 0.4,
+          fill: true,
+          borderWidth: 3
+        }, {
+          label: 'Forum Activity',
+          data: [80, 150, 200, 350, 180, 250, 300],
+          borderColor: '#48b8d0',
+          /* Teal */
+          backgroundColor: 'rgba(72, 184, 208, 0.1)',
+          /* Teal */
+          tension: 0.4,
+          fill: true,
+          borderWidth: 3
+        }, {
+          label: 'Wellness Check-ins',
+          data: [60, 120, 180, 280, 150, 200, 250],
+          borderColor: '#f77f00',
+          /* Orange */
+          backgroundColor: 'rgba(247, 127, 0, 0.1)',
+          /* Orange */
+          tension: 0.4,
+          fill: true,
+          borderWidth: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Platform Usage Trends',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            color: '#6941c6' /* Dark Purple */
+          },
+          legend: {
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              font: {
+                size: 14
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              color: '#666'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: '#666'
+            }
+          }
+        }
+      }
+    });
+
+    // Time range selector
+    document.getElementById('timeRange').addEventListener('change', function () {
+      const range = this.value;
+      console.log('Time range changed to:', range);
+
+      const newData = {
+        'today': [30, 45, 60, 80, 70, 90, 120],
+        'week': [120, 190, 300, 500, 200, 300, 450],
+        'month': [800, 1200, 1800, 2200, 1600, 2000, 2400]
+      };
+
+      usageChart.data.datasets[0].data = newData[range] || newData['week'];
+      usageChart.update();
+    });
+
+    // Real-time updates simulation
+    function simulateRealTimeUpdates() {
+      setInterval(() => {
+        const activeUsers = document.getElementById('activeUsers');
+        const currentValue = parseInt(activeUsers.textContent.replace(',', ''));
+        const change = Math.floor(Math.random() * 20) - 10;
+        const newValue = Math.max(0, currentValue + change);
+        activeUsers.textContent = newValue.toLocaleString();
+
+        activeUsers.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          activeUsers.style.transform = 'scale(1)';
+        }, 200);
+      }, 30000);
+    }
+
+    simulateRealTimeUpdates();
+
+    // Quick action handlers
+    document.querySelectorAll('.quick-action-btn').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        if (this.id !== 'takeSelfTest') {
+          e.preventDefault();
+          showNotification(`Action initiated: ${this.textContent.trim()}`);
+        }
+      });
+    });
+
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #7f56d9, #6941c6); /* Purple gradient */
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(127, 86, 217, 0.3); /* Purple shadow */
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      `;
+      notification.textContent = message;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+  </script>
+</body>
+
+</html>

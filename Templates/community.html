@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Community - SereneSpace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">🌟 SereneSpace</a>
+                <ul class="nav-links">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/activities">Activities</a></li>
+                    <li><a href="/community" class="active">Community</a></li>
+                    <li><a href="/counseling">Get Help</a></li>
+                    <li><a href="/emergency">Emergency</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="welcome-section">
+                <h1 class="card-title">Connect with Your Peer Community</h1>
+                <p class="card-subtitle">
+                    Join safe, supportive spaces where you can share experiences and find understanding.
+                    All interactions are anonymous and moderated for your safety.
+                </p>
+            </div>
+
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin: 40px 0;">
+                <div class="card">
+                    <h3 style="color: #2D3748; margin-bottom: 20px;">🎯 Find Your Group</h3>
+                    <div class="community-groups">
+                        <div class="group-card" onclick="joinGroup('exam-stress')">
+                            <div class="group-icon">📚</div>
+                            <div>
+                                <h4>Exam Stress Squad</h4>
+                                <p>Share study tips and manage exam anxiety</p>
+                                <span class="group-members">127 members online</span>
+                            </div>
+                        </div>
+
+                        <div class="group-card" onclick="joinGroup('motivation')">
+                            <div class="group-icon">💪</div>
+                            <div>
+                                <h4>Motivation Boosters</h4>
+                                <p>Daily inspiration and goal support</p>
+                                <span class="group-members">89 members online</span>
+                            </div>
+                        </div>
+
+                        <div class="group-card" onclick="joinGroup('sleep-better')">
+                            <div class="group-icon">🌙</div>
+                            <div>
+                                <h4>Sleep Better Together</h4>
+                                <p>Tips for better sleep and relaxation</p>
+                                <span class="group-members">156 members online</span>
+                            </div>
+                        </div>
+
+                        <div class="group-card" onclick="joinGroup('creative-minds')">
+                            <div class="group-icon">🎨</div>
+                            <div>
+                                <h4>Creative Minds</h4>
+                                <p>Art, music, and creative expression</p>
+                                <span class="group-members">203 members online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #2D3748; margin-bottom: 20px;">💬 Anonymous Chat</h3>
+                    <div id="chatArea" class="chat-area">
+                        <div class="chat-message peer">
+                            <div class="message-avatar">👤</div>
+                            <div class="message-content">
+                                <div class="message-info">Anonymous Student • 5 min ago</div>
+                                <div class="message-text">Just wanted to say that you're not alone if you're feeling
+                                    overwhelmed. We're all in this together! ❤️</div>
+                            </div>
+                        </div>
+
+                        <div class="chat-message peer">
+                            <div class="message-avatar">🌻</div>
+                            <div class="message-content">
+                                <div class="message-info">Study Buddy • 12 min ago</div>
+                                <div class="message-text">Does anyone have tips for managing multiple deadlines? Feeling
+                                    a bit scattered lately.</div>
+                            </div>
+                        </div>
+
+                        <div class="chat-message peer">
+                            <div class="message-avatar">🎯</div>
+                            <div class="message-content">
+                                <div class="message-info">Peer Mentor • 18 min ago</div>
+                                <div class="message-text">Try breaking tasks into smaller chunks! I use the Pomodoro
+                                    technique - 25 min focus, 5 min break. Works wonders!</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Share something positive or ask for support..."
+                            maxlength="200">
+                        <button onclick="sendMessage()" class="btn btn-soft">Send</button>
+                    </div>
+
+                    <p style="font-size: 12px; color: #718096; text-align: center; margin-top: 10px;">
+                        All messages are monitored for safety and positivity
+                    </p>
+                </div>
+            </div>
+
+            <div class="recommendations-grid">
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #E6F3FF; color: #3182CE;">
+                            🤝
+                        </div>
+                        <div>
+                            <h3>Peer Mentorship</h3>
+                            <p style="color: #718096; font-size: 14px;">Connect with trained student mentors</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px;">Get one-on-one support from students who have been trained to
+                        provide peer counseling and emotional support.</p>
+                    <button class="btn btn-soft" onclick="connectWithMentor()">🎯 Find a Peer Mentor</button>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #F0FFF4; color: #38A169;">
+                            🎲
+                        </div>
+                        <div>
+                            <h3>Mood Matching</h3>
+                            <p style="color: #718096; font-size: 14px;">Connect with others feeling similar</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px;">Find others who are experiencing similar emotions or challenges.
+                        Sometimes it helps to know you're not alone.</p>
+                    <button class="btn btn-soft" onclick="findMoodMatches()">💙 Find Similar Feelings</button>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #FFF5F5; color: #E53E3E;">
+                            🏆
+                        </div>
+                        <div>
+                            <h3>Support Challenges</h3>
+                            <p style="color: #718096; font-size: 14px;">Group activities for wellness</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px;">Join group challenges focused on self-care, mindfulness, study
+                        habits, or just having fun together.</p>
+                    <button class="btn btn-soft" onclick="joinChallenge()">🚀 Join Challenge</button>
+                </div>
+            </div>
+
+            <!-- AI Bot Call-To-Action -->
+            <div class="card" style="text-align: center; margin: 40px 0;">
+                <h3 style="color: #2D3748; margin-bottom: 20px;">🤖 Need Support?</h3>
+                <p style="color: #718096; margin-bottom: 20px;">
+                    You can talk to our AI companion anytime for guidance and support.
+                </p>
+                <a href="/ai-chat" class="btn btn-primary"
+                    style="font-size: 20px; padding: 20px 40px; border-radius: 30px;">
+                    💬 Talk to our AI Bot
+                </a>
+            </div>
+
+            <div class="card" style="text-align: center; margin: 40px 0;">
+                <h3 style="color: #2D3748; margin-bottom: 20px;">🛡️ Community Guidelines</h3>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; text-align: left;">
+                    <div>
+                        <h4 style="color: #38A169; margin-bottom: 10px;">✅ We encourage:</h4>
+                        <ul style="color: #4A5568; line-height: 1.8;">
+                            <li>Sharing your experiences</li>
+                            <li>Offering kind support</li>
+                            <li>Asking for help</li>
+                            <li>Celebrating small wins</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #E53E3E; margin-bottom: 10px;">❌ Please avoid:</h4>
+                        <ul style="color: #4A5568; line-height: 1.8;">
+                            <li>Sharing personal details</li>
+                            <li>Giving medical advice</li>
+                            <li>Negative or harmful content</li>
+                            <li>Spam or inappropriate messages</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: #F0FFF4; border-radius: 15px;">
+                    <p style="color: #2D7748; font-weight: 500;">
+                        🔒 Your privacy is protected. All interactions are anonymous and moderated by trained
+                        volunteers.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentGroup = null;
+        let chatMessages = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load initial chat messages
+            loadChatMessages();
+
+            // Auto-refresh chat every 30 seconds
+            setInterval(loadChatMessages, 30000);
+        });
+
+        function joinGroup(groupId) {
+            currentGroup = groupId;
+
+            const groupNames = {
+                'exam-stress': 'Exam Stress Squad',
+                'motivation': 'Motivation Boosters',
+                'sleep-better': 'Sleep Better Together',
+                'creative-minds': 'Creative Minds'
+            };
+
+            showMessage('🎉 Joined Group', `Welcome to ${groupNames[groupId]}! Feel free to introduce yourself.`, 'success');
+
+            // Simulate joining group chat
+            setTimeout(() => {
+                addWelcomeMessage(groupNames[groupId]);
+            }, 1500);
+        }
+
+        function addWelcomeMessage(groupName) {
+            const chatArea = document.getElementById('chatArea');
+            const welcomeMessage = document.createElement('div');
+            welcomeMessage.className = 'chat-message system';
+            welcomeMessage.innerHTML = `
+                <div class="message-content" style="background: linear-gradient(135deg, #48BB78, #38A169); color: white; text-align: center;">
+                    <div class="message-text">🎉 You've joined ${groupName}! Say hello to your new community.</div>
+                </div>
+            `;
+
+            chatArea.appendChild(welcomeMessage);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+
+                // Simulate positive community response
+                setTimeout(() => {
+                    addCommunityResponse(message);
+                }, Math.random() * 3000 + 2000);
+            }
+        }
+
+        function addUserMessage(message) {
+            const chatArea = document.getElementById('chatArea');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'chat-message user';
+            userMessage.innerHTML = `
+                <div class="message-avatar">😊</div>
+                <div class="message-content">
+                    <div class="message-info">You • just now</div>
+                    <div class="message-text">${message}</div>
+                </div>
+            `;
+
+            chatArea.appendChild(userMessage);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function addCommunityResponse(originalMessage) {
+            const responses = [
+                "Thank you for sharing! Your courage to speak up helps others too. 💙",
+                "We're here for you! You're not alone in feeling this way. 🤗",
+                "That resonates with me too. It's comforting to know others understand. ✨",
+                "Sending positive vibes your way! We've all been there. 🌟",
+                "Your honesty is appreciated. This community is so supportive! 💪"
+            ];
+
+            const avatars = ['🌻', '🎯', '💙', '🌟', '🤝'];
+            const names = ['Supportive Soul', 'Study Buddy', 'Peer Helper', 'Kind Heart', 'Fellow Student'];
+
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+            const randomName = names[Math.floor(Math.random() * names.length)];
+
+            const chatArea = document.getElementById('chatArea');
+            const communityMessage = document.createElement('div');
+            communityMessage.className = 'chat-message peer';
+            communityMessage.innerHTML = `
+                <div class="message-avatar">${randomAvatar}</div>
+                <div class="message-content">
+                    <div class="message-info">${randomName} • just now</div>
+                    <div class="message-text">${randomResponse}</div>
+                </div>
+            `;
+
+            chatArea.appendChild(communityMessage);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function loadChatMessages() {
+            // Simulate loading new community messages
+            const newMessages = [
+                "Remember to take breaks during study sessions! Your brain needs rest too. 🧠",
+                "Just finished a tough assignment. Treating myself to some tea and a good book! 📚",
+                "Anyone else find that going for walks helps clear their mind? Nature is healing. 🌳",
+                "Struggled with anxiety today but used the breathing exercises from the app. Feeling better! 💚"
+            ];
+
+            // Occasionally add a new message to keep chat feeling alive
+            if (Math.random() < 0.3) {
+                const randomMessage = newMessages[Math.floor(Math.random() * newMessages.length)];
+                const avatars = ['🌙', '🎨', '📖', '🌿'];
+                const names = ['Night Owl', 'Creative Soul', 'Book Lover', 'Nature Friend'];
+
+                const chatArea = document.getElementById('chatArea');
+                const newMsg = document.createElement('div');
+                newMsg.className = 'chat-message peer';
+                newMsg.innerHTML = `
+                    <div class="message-avatar">${avatars[Math.floor(Math.random() * avatars.length)]}</div>
+                    <div class="message-content">
+                        <div class="message-info">${names[Math.floor(Math.random() * names.length)]} • 2 min ago</div>
+                        <div class="message-text">${randomMessage}</div>
+                    </div>
+                `;
+
+                chatArea.appendChild(newMsg);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        }
+
+        function connectWithMentor() {
+            showMessage('🤝 Connecting...', 'Finding an available peer mentor. This may take a moment.', 'info');
+
+            setTimeout(() => {
+                showMessage('✅ Mentor Found!', 'Alex is ready to chat with you. They\'re a final year student trained in peer counseling.', 'success');
+            }, 3000);
+        }
+
+        function findMoodMatches() {
+            showMessage('💙 Finding Matches...', 'Looking for others who might be feeling similar to you right now.', 'info');
+
+            setTimeout(() => {
+                showMessage('🎯 Matches Found!', 'Found 3 people who might understand what you\'re going through. Would you like to join a small group chat?', 'success');
+            }, 2500);
+        }
+
+        function joinChallenge() {
+            const challenges = [
+                '7-Day Gratitude Challenge: Write one thing you\'re grateful for each day',
+                'Mindful Week: Practice 5 minutes of mindfulness daily',
+                'Study Buddy Challenge: Help someone with their studies this week',
+                'Self-Care September: Do one kind thing for yourself each day'
+            ];
+
+            const randomChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+            showMessage('🚀 Challenge Joined!', randomChallenge, 'success');
+        }
+
+        // Allow Enter key to send messages
+        document.getElementById('chatInput').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function showMessage(title, message, type) {
+            const colors = {
+                'success': 'linear-gradient(135deg, #48BB78, #38A169)',
+                'info': 'linear-gradient(135deg, #4299E1, #3182CE)',
+                'warning': 'linear-gradient(135deg, #ED8936, #DD6B20)'
+            };
+
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: ${colors[type] || colors['info']};
+                color: white; padding: 20px; border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 350px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+
+            messageDiv.innerHTML = `
+                <h4 style="margin-bottom: 8px; font-size: 16px;">${title}</h4>
+                <p style="opacity: 0.9; font-size: 14px; line-height: 1.4;">${message}</p>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.remove();
+                style.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+
+</html>

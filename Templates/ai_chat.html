@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat - SereneSpace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <main class="main-content">
+        <div class="ai-chat-container">
+            <div class="ai-chat-header">
+                <button onclick="window.location.href='/community'"
+                    style="position:absolute; left:20px; top:20px; background:#fff; color:#2D3748; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">
+                    ← Back
+                </button>
+                <i class="fa-solid fa-robot"></i> AI Companion
+            </div>
+
+            <div class="messages-area" id="aiChatMessagesArea">
+                <div class="ai-message-bubble ai">
+                    <div class="ai-message-avatar">🤖</div>
+                    <div class="ai-message-content">
+                        <div class="message-text">
+                            Hello! I'm your AI companion. How are you feeling today? You can type
+                            "stress", "anxiety", "sleep", or "sad" for some quick tips.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-input-area">
+                <input type="text" id="aiMessageInput" placeholder="Ask me anything...">
+                <button id="sendAiMessageBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+
+            <div class="language-selector">
+                <label for="languageSelect">Language:</label>
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi (हिंदी)</option>
+                    <option value="ur">Urdu (اردو)</option>
+                    <option value="ks">Kashmiri (कॉशुर)</option>
+                    <option value="dg">Dogri (डोगरी)</option>
+                </select>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // JavaScript for AI Chat functionality (remains the same as provided)
+        const aiChatMessagesArea = document.getElementById('aiChatMessagesArea');
+        const aiMessageInput = document.getElementById('aiMessageInput');
+        const sendAiMessageBtn = document.getElementById('sendAiMessageBtn');
+        const languageSelect = document.getElementById('languageSelect');
+
+        function appendAiMessage(message, senderType) {
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('ai-message-bubble', senderType);
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('ai-message-avatar');
+            avatarDiv.textContent = senderType === 'ai' ? '🤖' : '👤';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('ai-message-content');
+
+            const textDiv = document.createElement('div');
+            textDiv.classList.add('message-text');
+            textDiv.textContent = message;
+
+            contentDiv.appendChild(textDiv);
+            messageBubble.appendChild(avatarDiv);
+            messageBubble.appendChild(contentDiv);
+            aiChatMessagesArea.appendChild(messageBubble);
+
+            aiChatMessagesArea.scrollTop = aiChatMessagesArea.scrollHeight;
+        }
+
+        function getAiResponse(userMessage, language) {
+            let response = "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.";
+            const lowerCaseMessage = userMessage.toLowerCase();
+
+            if (lowerCaseMessage.includes('stress') || lowerCaseMessage.includes('तनाव') || lowerCaseMessage.includes('تناؤ') || lowerCaseMessage.includes('डबाव') || lowerCaseMessage.includes('ذہنی دباؤ')) {
+                response = "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!";
+            } else if (lowerCaseMessage.includes('anxiety') || lowerCaseMessage.includes('चिंता') || lowerCaseMessage.includes('پریشانی') || lowerCaseMessage.includes('फिकर') || lowerCaseMessage.includes('بے چینی')) {
+                response = "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?";
+            } else if (lowerCaseMessage.includes('sleep') || lowerCaseMessage.includes('नींद') || lowerCaseMessage.includes('نیند') || lowerCaseMessage.includes('सुत्ता') || lowerCaseMessage.includes('سونا')) {
+                response = "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.";
+            } else if (lowerCaseMessage.includes('sad') || lowerCaseMessage.includes('दुख') || lowerCaseMessage.includes('غم') || lowerCaseMessage.includes('उदास') || lowerCaseMessage.includes('اداس')) {
+                response = "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.";
+            } else if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi') || lowerCaseMessage.includes('नमस्ते') || lowerCaseMessage.includes('السلام علیکم') || lowerCaseMessage.includes('आदाब') || lowerCaseMessage.includes('सत श्री अकाल')) {
+                response = "Hello there! How can I assist you today?";
+            } else if (lowerCaseMessage.includes('help') || lowerCaseMessage.includes('मदद') || lowerCaseMessage.includes('مدد') || lowerCaseMessage.includes('सहायता') || lowerCaseMessage.includes('امداد')) {
+                response = "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.";
+            }
+
+            const translations = {
+                "en": {
+                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!",
+                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?",
+                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.",
+                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.",
+                    "Hello there! How can I assist you today?": "Hello there! How can I assist you today?",
+                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.",
+                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'."
+                },
+                "hi": {
+                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "तनाव मुश्किल हो सकता है। गहरी सांस लेने के व्यायाम या थोड़ी देर टहलने की कोशिश करें। ब्रेक लेना याद रखें!",
+                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "चिंता के लिए, अपनी इंद्रियों पर ध्यान केंद्रित करना मदद कर सकता है। अभी आप क्या देखते हैं, सुनते हैं, सूंघते हैं, स्वाद लेते हैं और महसूस करते हैं?",
+                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "अच्छी नींद बहुत ज़रूरी है। नियमित नींद का कार्यक्रम बना कर रखने और सोने से पहले स्क्रीन से बचने की कोशिश करें।",
+                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "दुखी महसूस करना ठीक है। किसी दोस्त से बात करें, शांत संगीत सुनें, या किसी परामर्शदाता से बात करने पर विचार करें।",
+                    "Hello there! How can I assist you today?": "नमस्ते! मैं आज आपकी कैसे सहायता कर सकता हूं?",
+                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "यदि आपको तत्काल सहायता की आवश्यकता है, तो कृपया पृष्ठ के शीर्ष पर उल्लिखित संकट हेल्पलाइन पर कॉल करें। सामान्य सहायता के लिए, मैं सामान्य मानसिक स्वास्थ्य विषयों पर सुझाव दे सकता हूं।",
+                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "मैं सुनने के लिए यहां हूं। कृपया मुझे और बताएं या 'तनाव', 'चिंता', 'नींद', या 'दुख' टाइप करने का प्रयास करें।"
+                },
+                "ur": {
+                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "ذہنی دباؤ مشکل ہو سکتا ہے۔ گہری سانس لینے کی مشقیں یا تھوڑی دیر ٹہلنے کی کوشش کریں۔ وقفے لینا یاد رکھیں!",
+                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "بے چینی کے لیے، اپنی حواس پر توجہ مرکوز کرنا مدد کر سکتا ہے۔ آپ ابھی کیا دیکھتے ہیں، سنتے ہیں، سونگھتے ہیں، چکھتے ہیں اور محسوس کرتے ہیں؟",
+                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "اچھی نیند بہت ضروری ہے۔ باقاعدہ نیند کا شیڈول برقرار رکھنے اور سونے سے پہلے اسکرین سے بچنے کی کوشش کریں۔",
+                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "اداس محسوس کرنا ٹھیک ہے۔ کسی دوست سے رابطہ کریں، پرسکون موسیقی سنیں، یا کسی مشیر سے بات کرنے پر غور کریں۔",
+                    "Hello there! How can I assist you today?": "السلام علیکم! آج میں آپ کی کیسے مدد کر سکتا ہوں؟",
+                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "اگر آپ کو فوری مدد کی ضرورت ہے تو، براہ کرم صفحے کے اوپر مذکور بحرانی ہیلپ لائن پر کال کریں۔ عمومی مدد کے لیے، میں عام ذہنی صحت کے موضوعات پر تجاویز دے سکتا ہوں۔",
+                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "میں سننے کے لیے یہاں ہوں۔ براہ کرم مجھے مزید بتائیں یا 'تناؤ'، 'پریشانی'، 'نیند'، یا 'غم' ٹائپ کرنے کی کوشش کریں۔"
+                },
+                "ks": {
+                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "तनाव मुश्किल छु। गहर सांह लेअनुक अभ्यास या हल्क सैर करो। आराम करनो याद राखो!",
+                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "फिकर के लेये, अपन होशन पेठ ध्यान दिनी मदद करि सकछु। तुही अबे क्या विनुछु, बुजुछु, गंध लगाछुख, स्वाद लुछु और महसूस करुछु?",
+                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "शोभ नींद जरूरी छु। नियमित नींदुक कार्यक्रम बनाइये और सुत्तनी ब्रोंठ स्क्रीन नेवा छोडे।",
+                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "दुखी महसूस करन ठीक छु। कुनि यारस संग गल करो, शांत संगीत बुजो, या कुनि सलाहकारस संग गल करने सोचो।",
+                    "Hello there! How can I assist you today?": "आदाब! ऐज़ अज़ तुहुंदी कैत मदद करि सकान?",
+                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "अगर तुहि जल्दी मदद चैहीछुख, म्हरबानी करिया पन्नन मेथ लिकिथ संकट हेल्पलाइन पेठ फोन करो। आम मदद के लेये, अज़ आम मानसिक स्वास्थ्य विषयन पेठ सुझाव दिया सकान।",
+                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "अज़ बुजून के लेये यत छुस। मेहरबानी करिया म्यस होर दसो या 'तनाव', 'फिकर', 'नींद', या 'दुख' टाइप करुनुक कोशिश करो।"
+                },
+                "dg": {
+                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "डबाव मुश्किल होई सकदा ऐ। गहरी सांह लेण दे अभ्यास या छोटी जी सैर करो। आराम करणा याद रक्खो!",
+                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "बेचैनी दे लै, अपनी होशां च ध्यान देणा मदद करी सकदा ऐ। तुस अब्बै क्या दिक्खदे ओ, सुणदे ओ, सुंघदे ओ, स्वाद लैंदे ओ ते महसूस करदे ओ?",
+                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "चंगी नींद बडी जरूरी ऐ। नियमित नींद दा कार्यक्रम बणाई कै रक्खो ते सुत्तणे थमां पैह्ले स्क्रीन थमां बचो।",
+                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "उदास महसूस करणा ठीक ऐ। कुसी दोस्त कन्ने गल करो, शांत संगीत सुणो, या कुसी सलाहकार कन्ने गल करणे दे बारे च सोचो।",
+                    "Hello there! How can I assist you today?": "सत श्री अकाल! अज्ज मैं तुंदी कियां मदद करी सकना?",
+                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "जै तुसां गी तुरंत मदद दी लोड़ ऐ, त कृपा करियै पन्नै दे उप्परले हिस्से च लिख्खी संकट हेल्पलाइन च फोन करो। आम मदद लै, मैं आम मानसिक स्वास्थ्य विषयां पै सुझाव देई सकना।",
+                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "मैं सुणने लै इत्थै ओं। मेहरबानी करियै मिगी होर दस्सो या 'डबाव', 'फिकर', 'नींद', या 'उदास' टाइप करणे दी कोशिश करो।"
+                }
+            };
+
+            return translations[language] && translations[language][response] ? translations[language][response] : response;
+        }
+
+        sendAiMessageBtn.addEventListener('click', () => {
+            const userMessage = aiMessageInput.value.trim();
+            const selectedLanguage = languageSelect.value;
+            if (userMessage) {
+                appendAiMessage(userMessage, 'user');
+                aiMessageInput.value = '';
+                setTimeout(() => {
+                    const aiResponse = getAiResponse(userMessage, selectedLanguage);
+                    appendAiMessage(aiResponse, 'ai');
+                }, 500);
+            }
+        });
+
+        aiMessageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendAiMessageBtn.click();
+            }
+        });
+
+        languageSelect.addEventListener('change', () => {
+            const selectedLanguage = languageSelect.value;
+            aiChatMessagesArea.innerHTML = '';
+            const initialMessage = getAiResponse("hello", selectedLanguage);
+            appendAiMessage(initialMessage, 'ai');
+        });
+    </script>
+</body>
+
+</html>

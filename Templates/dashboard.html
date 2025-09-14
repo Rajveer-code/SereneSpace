@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wellness Dashboard - MindSpace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles to ensure proper display */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fecfef, #ff9a9e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #6B73FF;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #6B73FF;
+        }
+
+        .dashboard {
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6B73FF, #9F7AEA);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #38A169, #68D391);
+            color: white;
+        }
+
+        .btn-soft {
+            background: #F7FAFC;
+            color: #4A5568;
+            border: 1px solid #E2E8F0;
+        }
+
+        .mood-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .recommendation-list li {
+            padding: 8px 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .recommendation-list li:hover {
+            color: #6B73FF;
+        }
+
+        .hotline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .hotline-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .hotline-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 10px;
+        }
+
+        .hotline-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #E53E3E;
+            margin-bottom: 5px;
+        }
+
+        .hotline-hours {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">🌟 ScreneSpace</a>
+                <ul class="nav-links">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/activities">Activities</a></li>
+                    <li><a href="/community">Community</a></li>
+                    <li><a href="/counseling">Get Help</a></li>
+                    <li><a href="/emergency">Emergency</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="welcome-section">
+                <div class="mood-status">
+                    <span style="font-size: 24px;">
+                        {% if mood == 'stressed' %}😰
+                        {% elif mood == 'sad' %}😢
+                        {% elif mood == 'anxious' %}😟
+                        {% elif mood == 'lonely' %}😞
+                        {% elif mood == 'tired' %}😴
+                        {% elif mood == 'okay' %}😊
+                        {% elif mood == 'happy' %}😊
+                        {% elif mood == 'motivated' %}😤
+                        {% else %}😊
+                        {% endif %}
+                    </span>
+                    <div>
+                        <div style="font-weight: 600;">Currently feeling: {{ mood|title }}</div>
+                        <div style="font-size: 14px; color: #718096;">We've got your back today</div>
+                    </div>
+                </div>
+
+                <h1 class="card-title">Your Personalized Wellness Space</h1>
+                <div
+                    style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                    <p style="font-size: 18px; color: #2D3748; font-weight: 500; margin: 0;">
+                        "{{ daily_quote }}"
+                    </p>
+                </div>
+            </div>
+
+            <div class="recommendations-grid">
+                <div class="recommendation-card" style="border: 2px solid #6B73FF;">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #FFF5F5; color: #E53E3E;">
+                            🎮
+                        </div>
+                        <div>
+                            <h3>Interactive Activities</h3>
+                            <p style="color: #718096; font-size: 14px;">Games & exercises to lift your mood</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px;">Engage in fun, stress-busting games, creative exercises, and quick
+                        energy boosters designed to provide immediate relief.</p>
+                    <a href="/activities" class="btn btn-primary">🚀 Explore Activities</a>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #E6F3FF; color: #3182CE;">
+                            🧘‍♀️
+                        </div>
+                        <div>
+                            <h3>Quick Relief Activities</h3>
+                            <p style="color: #718096; font-size: 14px;">Start feeling better now</p>
+                        </div>
+                    </div>
+                    <ul class="recommendation-list">
+                        {% for activity in recommendations.activities %}
+                        <li onclick="startActivity('{{ activity }}')">• {{ activity }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div style="margin-top: 20px;">
+                        <a href="/breathing-exercise" class="btn btn-soft">🌬️ Start Breathing Exercise</a>
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #F0FFF4; color: #38A169;">
+                            🎵
+                        </div>
+                        <div>
+                            <h3>Calming Sounds</h3>
+                            <p style="color: #718096; font-size: 14px;">Soothing audio for your mood</p>
+                        </div>
+                    </div>
+                    <ul class="recommendation-list">
+                        {% for music in recommendations.music %}
+                        <li onclick="playMusic('{{ music }}')">• {{ music }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-soft" onclick="playRandomMusic()">🎶 Play Random Calm Music</button>
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon" style="background: #FFF5F5; color: #E53E3E;">
+                            🤝
+                        </div>
+                        <div>
+                            <h3>Connect & Share</h3>
+                            <p style="color: #718096; font-size: 14px;">You're not alone</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <p style="color: #4A5568;">Join others who understand what you're going through.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="/community" class="btn btn-soft">💬 Join Community</a>
+                        <a href="/counseling" class="btn btn-secondary">📞 Get Professional Help</a>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin: 40px 0;">
+                <div class="card">
+                    <h3 style="color: #2D3748; margin-bottom: 20px;">🎯 Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <button class="btn btn-soft" onclick="getRandomActivity()">
+                            🎲 Surprise Me With Something Fun
+                        </button>
+                        <button class="btn btn-soft" onclick="startJournaling()">
+                            📝 Write Down My Thoughts
+                        </button>
+                        <button class="btn btn-soft" onclick="connectWithPeer()">
+                            👥 Talk to a Peer Mentor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #2D3748; margin-bottom: 20px;">📊 Your Progress</h3>
+                    <div id="moodChart" style="text-align: center; padding: 20px;">
+                        <p style="color: #718096; margin-bottom: 15px;">Track how you're feeling over time</p>
+                        <canvas id="progressChart" width="250" height="150"></canvas>
+                        <p style="color: #4A5568; font-size: 14px; margin-top: 15px;">
+                            Great job checking in! Keep tracking your wellness journey.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <h3 style="color: #2D3748; margin-bottom: 20px;">🚀 Daily Challenge</h3>
+                <div id="dailyChallenge" style="background: #F7FAFC; padding: 20px; border-radius: 15px;">
+                    <p id="challengeText" style="font-size: 18px; color: #2D3748; margin-bottom: 20px;">
+                        Loading your personalized challenge...
+                    </p>
+                    <button class="btn btn-primary" onclick="completeChallenge()">
+                        ✅ Accept Challenge
+                    </button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="/mood-checkin" class="btn btn-secondary">
+                    🔄 Update My Mood
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <audio id="audioPlayer" style="display: none;" controls></audio>
+
+    <script>
+        // Daily challenges based on mood
+        const challenges = {
+            'stressed': [
+                'Take 3 deep breaths before each meal today',
+                'Step outside for 5 minutes and feel the fresh air',
+                'Write down one thing you\'re grateful for',
+                'Do 10 gentle stretches'
+            ],
+            'sad': [
+                'Send a kind message to a friend',
+                'Watch one funny video that makes you smile',
+                'Listen to your favorite uplifting song',
+                'Write one positive thing about yourself'
+            ],
+            'anxious': [
+                'Practice the 5-4-3-2-1 grounding technique',
+                'Organize one small area of your space',
+                'Take a mindful walk for 10 minutes',
+                'Do one thing that makes you feel accomplished'
+            ],
+            'lonely': [
+                'Reach out to someone you haven\'t talked to in a while',
+                'Join one online community discussion',
+                'Compliment a stranger or classmate',
+                'Write a letter to your future self'
+            ],
+            'tired': [
+                'Take a 20-minute power nap',
+                'Drink an extra glass of water',
+                'Go to bed 30 minutes earlier tonight',
+                'Do gentle stretches to energize your body'
+            ],
+            'default': [
+                'Try something new for 5 minutes',
+                'Help someone else today',
+                'Practice mindfulness during one daily activity',
+                'Do one creative thing'
+            ]
+        };
+
+        // Calming music/sounds data
+        const calmingSounds = {
+            'Rain sounds': 'https://www.soundjay.com/misc/sounds-916.mp3',
+            'Ocean waves': 'https://www.soundjay.com/misc/sounds-917.mp3',
+            'Forest ambience': 'https://www.soundjay.com/misc/sounds-918.mp3',
+            'Soft instrumental': 'https://www.soundjay.com/misc/sounds-919.mp3'
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load daily challenge
+            loadDailyChallenge();
+
+            // Load mood progress chart
+            loadProgressChart();
+
+            // Add entrance animations
+            const cards = document.querySelectorAll('.recommendation-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+
+        function loadDailyChallenge() {
+            const mood = '{{ mood }}';
+            const moodChallenges = challenges[mood] || challenges['default'];
+            const randomChallenge = moodChallenges[Math.floor(Math.random() * moodChallenges.length)];
+
+            document.getElementById('challengeText').textContent = randomChallenge;
+        }
+
+        function startActivity(activity) {
+            showMessage(`Starting: ${activity}`, 'Let\'s do this together! 🌟', 'info');
+
+            if (activity.includes('breathing')) {
+                setTimeout(() => {
+                    window.location.href = '/breathing-exercise';
+                }, 1500);
+            }
+        }
+
+        function playMusic(musicType) {
+            showMessage('🎵 Playing calming music', `Enjoy some peaceful ${musicType.toLowerCase()}`, 'success');
+        }
+
+        function playRandomMusic() {
+            const musicTypes = Object.keys(calmingSounds);
+            const randomMusic = musicTypes[Math.floor(Math.random() * musicTypes.length)];
+            playMusic(randomMusic);
+        }
+
+        function getRandomActivity() {
+            fetch('/api/get-activity')
+                .then(response => response.json())
+                .then(data => {
+                    showMessage('🎲 Random Activity', data.activity, 'info');
+                });
+        }
+
+        function startJournaling() {
+            const journalPrompts = [
+                'What am I feeling right now, and what might have triggered this feeling?',
+                'What is one thing I can do today to take care of myself?',
+                'What am I grateful for in this moment?',
+                'What would I tell a friend who was feeling the way I am right now?'
+            ];
+
+            const randomPrompt = journalPrompts[Math.floor(Math.random() * journalPrompts.length)];
+            showMessage('📝 Journal Prompt', randomPrompt, 'info');
+        }
+
+        function connectWithPeer() {
+            showMessage('👥 Connecting you...', 'Finding an available peer mentor. This may take a moment.', 'info');
+            setTimeout(() => {
+                window.location.href = '/community';
+            }, 2000);
+        }
+
+        function completeChallenge() {
+            showMessage('🎉 Challenge Accepted!', 'You\'re doing great! Every small step counts toward your wellness.', 'success');
+
+            const button = event.target;
+            button.textContent = '✅ Challenge Completed!';
+            button.style.background = '#48BB78';
+            button.disabled = true;
+        }
+
+        function loadProgressChart() {
+            fetch('/api/mood-history')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.history && data.history.length > 0) {
+                        drawSimpleChart(data.history);
+                    } else {
+                        document.getElementById('moodChart').innerHTML = `
+                            <p style="color: #718096;">Start tracking your mood daily to see your progress!</p>
+                            <div style="background: #F0FFF4; padding: 15px; border-radius: 10px; margin-top: 10px;">
+                                <p style="color: #38A169; font-size: 14px;">✨ Tip: Regular check-ins help you understand your patterns!</p>
+                            </div>
+                        `;
+                    }
+                });
+        }
+
+        function drawSimpleChart(history) {
+            const canvas = document.getElementById('progressChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#6B73FF';
+            ctx.lineWidth = 3;
+
+            const width = canvas.width;
+            const height = canvas.height;
+            const points = history.slice(-7);
+
+            points.forEach((point, index) => {
+                const x = (index / (points.length - 1)) * (width - 40) + 20;
+                const moodScore = getMoodScore(point.mood);
+                const y = height - (moodScore / 5) * (height - 40) - 20;
+
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+
+                ctx.fillStyle = '#6B73FF';
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+
+            ctx.stroke();
+        }
+
+        function getMoodScore(mood) {
+            const scores = {
+                'sad': 1, 'stressed': 1.5, 'anxious': 1.5, 'lonely': 2,
+                'tired': 2.5, 'okay': 3, 'happy': 4, 'motivated': 5
+            };
+            return scores[mood] || 3;
+        }
+
+        function showMessage(title, message, type) {
+            const colors = {
+                'success': 'linear-gradient(135deg, #48BB78, #38A169)',
+                'info': 'linear-gradient(135deg, #4299E1, #3182CE)',
+                'warning': 'linear-gradient(135deg, #ED8936, #DD6B20)'
+            };
+
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: ${colors[type] || colors['info']};
+                color: white; padding: 20px; border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 350px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+
+            messageDiv.innerHTML = `
+                <h4 style="margin-bottom: 8px; font-size: 16px;">${title}</h4>
+                <p style="opacity: 0.9; font-size: 14px; line-height: 1.4;">${message}</p>
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.remove();
+                style.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+
+</html>
