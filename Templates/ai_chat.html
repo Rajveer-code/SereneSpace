@@ -8,6 +8,109 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .typing-indicator {
+            display: none;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 20px;
+            max-width: fit-content;
+            align-items: center;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            height: 8px;
+            width: 8px;
+            background: #6c757d;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+            padding: 0 20px;
+        }
+
+        .suggestion-chip {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-chip:hover {
+            background: #1976d2;
+            color: white;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+
+        .quick-action-btn {
+            background: #f5f5f5;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .ai-message-bubble.user .message-time {
+            text-align: left;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,7 +123,7 @@
                     style="position:absolute; left:20px; top:20px; background:#fff; color:#2D3748; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">
                     ← Back
                 </button>
-                <i class="fa-solid fa-robot"></i> AI Companion
+                <i class="fa-solid fa-robot"></i> AI Companion - Serenity
             </div>
 
             <div class="messages-area" id="aiChatMessagesArea">
@@ -28,16 +131,45 @@
                     <div class="ai-message-avatar">🤖</div>
                     <div class="ai-message-content">
                         <div class="message-text">
-                            Hello! I'm your AI companion. How are you feeling today? You can type
-                            "stress", "anxiety", "sleep", or "sad" for some quick tips.
+                            Hi there! I'm Serenity, your AI companion. I'm here to listen, support, and help you
+                            navigate your mental wellness journey. How are you feeling today?
                         </div>
+                        <div class="message-time" id="initialTime"></div>
                     </div>
                 </div>
             </div>
 
+            <div class="suggestion-chips" id="suggestionChips">
+                <button class="suggestion-chip" onclick="sendSuggestion('I\'m feeling stressed')">I'm feeling
+                    stressed</button>
+                <button class="suggestion-chip" onclick="sendSuggestion('I\'m having trouble sleeping')">Sleep
+                    issues</button>
+                <button class="suggestion-chip" onclick="sendSuggestion('I feel anxious')">Feeling anxious</button>
+                <button class="suggestion-chip" onclick="sendSuggestion('I\'m feeling sad today')">Feeling sad</button>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="ai-message-avatar">🤖</div>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
             <div class="message-input-area">
-                <input type="text" id="aiMessageInput" placeholder="Ask me anything...">
+                <input type="text" id="aiMessageInput" placeholder="Share what's on your mind...">
                 <button id="sendAiMessageBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="sendSuggestion('Tell me about breathing exercises')">🫁
+                    Breathing</button>
+                <button class="quick-action-btn" onclick="sendSuggestion('I need help with meditation')">🧘
+                    Meditation</button>
+                <button class="quick-action-btn" onclick="sendSuggestion('Can you help me with journaling?')">📝
+                    Journal</button>
+                <button class="quick-action-btn" onclick="window.location.href='/emergency'">🆘 Crisis</button>
             </div>
 
             <div class="language-selector">
@@ -54,13 +186,361 @@
     </main>
 
     <script>
-        // JavaScript for AI Chat functionality (remains the same as provided)
         const aiChatMessagesArea = document.getElementById('aiChatMessagesArea');
         const aiMessageInput = document.getElementById('aiMessageInput');
         const sendAiMessageBtn = document.getElementById('sendAiMessageBtn');
         const languageSelect = document.getElementById('languageSelect');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const suggestionChips = document.getElementById('suggestionChips');
 
-        function appendAiMessage(message, senderType) {
+        // Set initial timestamp
+        document.getElementById('initialTime').textContent = new Date().toLocaleTimeString();
+
+        // Conversation context to make responses more natural
+        let conversationContext = {
+            previousTopics: [],
+            userMood: null,
+            sessionStartTime: new Date(),
+            messageCount: 0,
+            userName: null
+        };
+
+        // Advanced AI Response System
+        class MentalHealthAI {
+            constructor() {
+                this.responses = {
+                    // Stress-related responses
+                    stress: {
+                        patterns: ['stress', 'stressed', 'overwhelm', 'pressure', 'burden', 'tension', 'तनाव', 'تناؤ', 'ڈبا ؤ'],
+                        responses: [
+                            "I hear that you're feeling stressed right now. That's completely understandable - stress is our mind's way of responding to challenges. Can you tell me what's been weighing on your mind lately?",
+                            "Stress can feel overwhelming, but you're taking a positive step by reaching out. Sometimes just talking about what's stressing us can help lighten the load. What's been the biggest source of stress for you recently?",
+                            "I'm sorry you're going through a stressful time. Remember, you've handled difficult situations before, and you have the strength to get through this too. Would you like to try a quick stress-relief technique together?",
+                            "Feeling stressed is your body's natural response to challenging situations. Let's work on this together. Have you noticed any particular triggers that tend to increase your stress levels?",
+                            "I can sense the weight you're carrying right now. Stress affects us all differently, but there are ways to manage it. Would you like to explore some coping strategies, or would you prefer to talk about what's causing these feelings?"
+                        ],
+                        followUp: [
+                            "Try this: Take a deep breath in for 4 counts, hold for 4, then exhale for 6. This activates your body's relaxation response.",
+                            "Here's a quick grounding technique: Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, and 1 you can taste.",
+                            "Remember, it's okay to take breaks. Your mental health is just as important as your physical health.",
+                            "Would you like me to guide you through a brief mindfulness exercise? It can help create some space between you and your stressful thoughts."
+                        ]
+                    },
+
+                    anxiety: {
+                        patterns: ['anxious', 'anxiety', 'worry', 'nervous', 'panic', 'fear', 'scared', 'चिंता', 'بے چینی', 'فکر'],
+                        responses: [
+                            "Anxiety can feel really intense and overwhelming. I want you to know that what you're experiencing is valid, and you're not alone in this. Can you describe what the anxiety feels like for you right now?",
+                            "I understand you're feeling anxious. Anxiety often comes with physical sensations too - racing heart, tight chest, or restlessness. Are you experiencing any of these symptoms?",
+                            "Thank you for sharing this with me. Anxiety is more common than you might think, and there are effective ways to manage it. What tends to trigger these anxious feelings for you?",
+                            "Feeling anxious can be exhausting. Your mind might be racing with 'what if' thoughts. Let's try to slow things down together. Are you in a safe, comfortable place right now?",
+                            "Anxiety has a way of making everything feel urgent and threatening. But right now, in this moment, you're safe. Let's focus on bringing you back to the present. Can you tell me about your surroundings?"
+                        ],
+                        followUp: [
+                            "Try the 5-4-3-2-1 grounding technique: identify 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste.",
+                            "Let's try box breathing: breathe in for 4, hold for 4, out for 4, hold for 4. Repeat this cycle.",
+                            "Remember: anxiety is temporary. You've gotten through anxious moments before, and you'll get through this one too.",
+                            "Would it help to visit our breathing exercises page? Sometimes guided breathing can provide immediate relief."
+                        ]
+                    },
+
+                    sadness: {
+                        patterns: ['sad', 'depressed', 'down', 'low', 'empty', 'hopeless', 'lonely', 'hurt', 'दुख', 'اداس', 'غم'],
+                        responses: [
+                            "I'm really glad you felt comfortable sharing this with me. Feeling sad is a natural human emotion, and it's okay to sit with these feelings. You don't have to carry this alone. What's been making you feel this way?",
+                            "It takes courage to acknowledge when we're struggling with sadness. Your feelings are completely valid. Sometimes sadness comes and goes like waves - are you experiencing it that way, or does it feel more constant?",
+                            "I hear the sadness in your words, and I want you to know that I'm here to listen without judgment. Sadness can feel isolating, but reaching out like this shows real strength. Can you tell me more about what's going on?",
+                            "Sadness can feel heavy and overwhelming sometimes. It's important to remember that feeling sad doesn't make you weak - it makes you human. Have you been able to talk to anyone else about how you're feeling?",
+                            "Thank you for trusting me with these feelings. When we're sad, it can be hard to see beyond the current moment, but feelings do change and evolve. What usually helps you feel a little better when you're going through tough times?"
+                        ],
+                        followUp: [
+                            "Sometimes gentle activities can help when we're sad: a warm bath, listening to music, or just being outside for a few minutes.",
+                            "Remember that it's okay to not be okay sometimes. Healing isn't linear, and every small step counts.",
+                            "Would you like to explore some of our community support features? Sometimes connecting with others who understand can be comforting.",
+                            "If these feelings persist or get worse, please consider reaching out to a mental health professional. You deserve support."
+                        ]
+                    },
+
+                    sleep: {
+                        patterns: ['sleep', 'insomnia', 'tired', 'exhausted', 'can\'t sleep', 'sleeping', 'sleepy', 'नींद', 'نیند'],
+                        responses: [
+                            "Sleep issues can be really frustrating and affect everything else in your life. I understand how exhausting it can be when you can't get good rest. How long have you been having trouble with sleep?",
+                            "Good sleep is so important for our mental and physical wellbeing. It sounds like you're struggling with this right now. Are you having trouble falling asleep, staying asleep, or both?",
+                            "Sleep problems often go hand-in-hand with stress and anxiety. It becomes a cycle where poor sleep makes us more stressed, and stress makes it harder to sleep. Does this sound familiar to you?",
+                            "I hear you're having sleep difficulties. This is more common than you might think, especially during stressful periods. Can you tell me about your evening routine? Sometimes small changes can make a big difference.",
+                            "Not getting enough quality sleep can affect our mood, concentration, and overall wellbeing. You're taking the right step by addressing this. What does your sleep environment look like?"
+                        ],
+                        followUp: [
+                            "Try creating a wind-down routine: dim lights, no screens 1 hour before bed, maybe some gentle stretching or reading.",
+                            "Keep your bedroom cool, dark, and quiet. Consider blackout curtains or a white noise machine if needed.",
+                            "Avoid caffeine after 2 PM and try not to eat large meals close to bedtime.",
+                            "Would you like to try our guided meditation or breathing exercises? These can help prepare your mind for sleep."
+                        ]
+                    },
+
+                    general: {
+                        greetings: ['hello', 'hi', 'hey', 'good morning', 'good evening', 'namaste', 'सलाम', 'आदाब'],
+                        responses: [
+                            "Hello! I'm so glad you're here. I'm Serenity, and I'm here to support you on your mental wellness journey. How are you feeling today?",
+                            "Hi there! Welcome to our safe space. I'm here to listen and help however I can. What brings you here today?",
+                            "Hello! It's wonderful to meet you. I'm here to provide support and be a caring companion. How has your day been treating you?",
+                            "Hey! I'm really happy you decided to reach out. Sometimes taking that first step to talk about how we're feeling is the hardest part. What's on your mind?",
+                            "Hello and welcome! I'm Serenity, your AI companion. I'm here to listen without judgment and offer support. How are you doing right now?"
+                        ]
+                    },
+
+                    help: {
+                        patterns: ['help', 'support', 'don\'t know', 'confused', 'lost', 'मदद', 'مدد'],
+                        responses: [
+                            "I'm here to help you in any way I can. Sometimes it helps to start by just sharing what's on your mind, even if it feels jumbled or unclear. There's no pressure to have it all figured out.",
+                            "Asking for help is actually a sign of strength, not weakness. I'm glad you reached out. We can take this one step at a time. What feels most pressing for you right now?",
+                            "I hear that you're looking for support, and I want you to know that you've come to the right place. We can work through whatever you're facing together. Where would you like to start?",
+                            "It's completely normal to feel unsure about where to begin when we're struggling. That's okay. I'm here to help guide you through this. Can you tell me a little about what's been on your mind lately?",
+                            "Thank you for reaching out for help. That takes courage. I'm here to listen and support you. Even if you're not sure exactly what kind of help you need, we can explore that together."
+                        ],
+                        followUp: [
+                            "Remember, you can also explore other parts of our app: breathing exercises, community support, or professional counseling resources.",
+                            "If you're in crisis or having thoughts of self-harm, please reach out to our emergency resources immediately.",
+                            "Take your time. There's no rush. I'm here to listen at whatever pace feels comfortable for you.",
+                            "Would it help to try a specific activity like journaling or guided meditation? Sometimes taking action can help clarify our thoughts."
+                        ]
+                    }
+                };
+
+                this.motivationalQuotes = [
+                    "You are braver than you believe, stronger than you seem, and smarter than you think.",
+                    "Healing doesn't mean the damage never existed. It means the damage no longer controls your life.",
+                    "Your mental health is a priority. Your happiness is essential. Your self-care is a necessity.",
+                    "It's okay to not be okay. It's not okay to stay that way without seeking help.",
+                    "Progress, not perfection. Every small step forward is still a step in the right direction."
+                ];
+
+                this.checkInQuestions = [
+                    "How are you feeling emotionally right now, on a scale of 1-10?",
+                    "What's one thing that brought you a moment of peace today?",
+                    "Have you been taking care of your basic needs - eating, sleeping, staying hydrated?",
+                    "Is there anything specific that's been weighing on your mind?",
+                    "What's one small thing you could do for yourself today?"
+                ];
+            }
+
+            generateResponse(userMessage, language = 'en') {
+                const lowerMessage = userMessage.toLowerCase();
+                conversationContext.messageCount++;
+
+                // Check for crisis keywords first
+                if (this.containsCrisisKeywords(lowerMessage)) {
+                    return this.getCrisisResponse();
+                }
+
+                // Identify the primary topic
+                const topic = this.identifyTopic(lowerMessage);
+
+                // Generate contextual response
+                let response = this.getContextualResponse(topic, userMessage, lowerMessage);
+
+                // Add follow-up if appropriate
+                if (Math.random() > 0.6) {
+                    response += "\n\n" + this.getFollowUp(topic);
+                }
+
+                // Translate if needed
+                if (language !== 'en') {
+                    response = this.translateResponse(response, language);
+                }
+
+                // Update conversation context
+                if (topic) {
+                    conversationContext.previousTopics.push(topic);
+                    if (conversationContext.previousTopics.length > 5) {
+                        conversationContext.previousTopics.shift();
+                    }
+                }
+
+                return response;
+            }
+
+            identifyTopic(message) {
+                for (const [topic, data] of Object.entries(this.responses)) {
+                    if (topic === 'general') continue;
+                    if (data.patterns && data.patterns.some(pattern => message.includes(pattern))) {
+                        return topic;
+                    }
+                }
+
+                // Check for greetings
+                if (this.responses.general.greetings.some(greeting => message.includes(greeting))) {
+                    return 'greeting';
+                }
+
+                return null;
+            }
+
+            getContextualResponse(topic, originalMessage, lowerMessage) {
+                if (topic === 'greeting') {
+                    const responses = this.responses.general.responses;
+                    return responses[Math.floor(Math.random() * responses.length)];
+                }
+
+                if (topic && this.responses[topic]) {
+                    const responses = this.responses[topic].responses;
+                    let response = responses[Math.floor(Math.random() * responses.length)];
+
+                    // Add personal touch based on conversation context
+                    if (conversationContext.messageCount > 3) {
+                        const personalizations = [
+                            "I've been listening to what you've shared, and I want you to know that ",
+                            "As we continue talking, I'm noticing that ",
+                            "Building on what you've told me, "
+                        ];
+                        if (Math.random() > 0.7) {
+                            response = personalizations[Math.floor(Math.random() * personalizations.length)] + response.toLowerCase();
+                        }
+                    }
+
+                    return response;
+                }
+
+                // Default empathetic responses for unrecognized input
+                const defaultResponses = [
+                    "I hear you, and I want you to know that what you're experiencing matters. Can you tell me more about what's going on?",
+                    "Thank you for sharing that with me. It sounds like you have a lot on your mind. I'm here to listen and support you through this.",
+                    "I may not have all the answers, but I'm here to listen and support you. Sometimes just talking through our thoughts and feelings can be helpful. What's been on your mind lately?",
+                    "It sounds like you're going through something difficult right now. I'm here to provide a safe space for you to express yourself. Can you share more about how you're feeling?",
+                    "I appreciate you opening up to me. Everyone's experience is unique, and I want to better understand yours. What would be most helpful for you right now?"
+                ];
+
+                return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+            }
+
+            getFollowUp(topic) {
+                if (topic && this.responses[topic] && this.responses[topic].followUp) {
+                    const followUps = this.responses[topic].followUp;
+                    return followUps[Math.floor(Math.random() * followUps.length)];
+                }
+
+                const generalFollowUps = [
+                    "Is there anything specific you'd like to talk about or explore further?",
+                    "How are you feeling about what we've discussed so far?",
+                    "Would you like to try any of our other resources, like breathing exercises or meditation?",
+                    "Remember, I'm here whenever you need someone to listen."
+                ];
+
+                return generalFollowUps[Math.floor(Math.random() * generalFollowUps.length)];
+            }
+
+            containsCrisisKeywords(message) {
+                const crisisKeywords = [
+                    'suicide', 'kill myself', 'end it all', 'harm myself', 'cut myself',
+                    'want to die', 'better off dead', 'no point living', 'hurt myself'
+                ];
+                return crisisKeywords.some(keyword => message.includes(keyword));
+            }
+
+            getCrisisResponse() {
+                return "I'm very concerned about what you've shared. Your life has value and meaning, and there are people who want to help you. Please reach out to a crisis helpline immediately - you can find emergency resources in our app. You don't have to go through this alone. Would you like me to direct you to our emergency resources page?";
+            }
+
+            translateResponse(response, language) {
+                if (language === 'en') return response;
+
+                const translations = {
+                    'hi': {
+                        // Stress responses
+                        "I hear that you're feeling stressed right now. That's completely understandable - stress is our mind's way of responding to challenges. Can you tell me what's been weighing on your mind lately?": "मैं समझ रहा हूं कि आप अभी तनाव महसूस कर रहे हैं। यह बिल्कुल समझ में आता है - तनाव हमारे मन का चुनौतियों के प्रति प्रतिक्रिया का तरीका है। क्या आप बता सकते हैं कि हाल ही में आपके मन में क्या बात है?",
+                        "Stress can feel overwhelming, but you're taking a positive step by reaching out. Sometimes just talking about what's stressing us can help lighten the load. What's been the biggest source of stress for you recently?": "तनाव भारी लग सकता है, लेकिन सहायता मांगना एक सकारात्मक कदम है। कभी-कभी सिर्फ अपने तनाव के बारे में बात करना ही बोझ कम कर सकता है। हाल ही में आपके लिए तनाव का सबसे बड़ा कारण क्या रहा है?",
+
+                        // Anxiety responses  
+                        "Anxiety can feel really intense and overwhelming. I want you to know that what you're experiencing is valid, and you're not alone in this. Can you describe what the anxiety feels like for you right now?": "चिंता वास्तव में तीव्र और भारी लग सकती है। मैं चाहता हूं कि आप जानें कि जो आप महसूस कर रहे हैं वह वैध है, और आप इसमें अकेले नहीं हैं। क्या आप बता सकते हैं कि अभी आपके लिए चिंता कैसी लगती है?",
+                        "I understand you're feeling anxious. Anxiety often comes with physical sensations too - racing heart, tight chest, or restlessness. Are you experiencing any of these symptoms?": "मैं समझता हूं कि आप चिंतित महसूस कर रहे हैं। चिंता अक्सर शारीरिक संवेदनाओं के साथ भी आती है - तेज़ दिल की धड़कन, सीने में जकड़न, या बेचैनी। क्या आप इनमें से कोई लक्षण महसूस कर रहे हैं?",
+
+                        // Sadness responses
+                        "I'm really glad you felt comfortable sharing this with me. Feeling sad is a natural human emotion, and it's okay to sit with these feelings. You don't have to carry this alone. What's been making you feel this way?": "मुझे वास्तव में खुशी है कि आपने मेरे साथ यह साझा करना उचित समझा। उदास महसूस करना एक प्राकृतिक मानवीय भावना है, और इन भावनाओं के साथ रहना ठीक है। आपको यह अकेले नहीं सहना है। आपको ऐसा महसूस क्यों हो रहा है?",
+
+                        // Sleep responses
+                        "Sleep issues can be really frustrating and affect everything else in your life. I understand how exhausting it can be when you can't get good rest. How long have you been having trouble with sleep?": "नींद की समस्याएं वास्तव में निराशाजनक हो सकती हैं और आपके जीवन की हर चीज़ को प्रभावित कर सकती हैं। मैं समझता हूं कि जब आपको अच्छा आराम नहीं मिलता तो यह कितना थकाऊ हो सकता है। आपको कब से नींद की परेशानी हो रही है?",
+
+                        // General responses
+                        "Hello! I'm so glad you're here. I'm Serenity, and I'm here to support you on your mental wellness journey. How are you feeling today?": "नमस्ते! मुझे बहुत खुशी है कि आप यहां हैं। मैं सेरेनिटी हूं, और मैं आपके मानसिक स्वास्थ्य की यात्रा में आपका साथ देने के लिए यहां हूं। आज आप कैसा महसूस कर रहे हैं?",
+                        "Hi there! Welcome to our safe space. I'm here to listen and help however I can. What brings you here today?": "नमस्ते! हमारे सुरक्षित स्थान में आपका स्वागत है। मैं यहां सुनने और जो भी मदद कर सकूं करने के लिए हूं। आज आपको यहां क्या लाया है?"
+                    },
+
+                    'ur': {
+                        // Stress responses
+                        "I hear that you're feeling stressed right now. That's completely understandable - stress is our mind's way of responding to challenges. Can you tell me what's been weighing on your mind lately?": "میں سمجھ رہا ہوں کہ آپ ابھی تناؤ محسوس کر رہے ہیں۔ یہ بالکل سمجھ میں آتا ہے - تناؤ ہمارے دماغ کا چیلنجز کا جواب دینے کا طریقہ ہے۔ کیا آپ بتا سکتے ہیں کہ حال ہی میں آپ کے دل پر کیا بات ہے؟",
+                        "Stress can feel overwhelming, but you're taking a positive step by reaching out. Sometimes just talking about what's stressing us can help lighten the load. What's been the biggest source of stress for you recently?": "تناؤ بہت زیادہ لگ سکتا ہے، لیکن مدد مانگنا ایک مثبت قدم ہے۔ کبھی کبھی صرف اپنے تناؤ کے بارے میں بات کرنا ہی بوجھ کم کر سکتا ہے۔ حال ہی میں آپ کے لیے تناؤ کا سب سے بڑا ذریعہ کیا رہا ہے؟",
+
+                        // Anxiety responses
+                        "Anxiety can feel really intense and overwhelming. I want you to know that what you're experiencing is valid, and you're not alone in this. Can you describe what the anxiety feels like for you right now?": "اضطراب واقعی شدید اور بہت زیادہ لگ سکتا ہے۔ میں چاہتا ہوں کہ آپ جانیں کہ جو آپ محسوس کر رہے ہیں وہ درست ہے، اور آپ اس میں اکیلے نہیں ہیں۔ کیا آپ بتا سکتے ہیں کہ ابھی آپ کے لیے اضطراب کیسا لگ رہا ہے؟",
+                        "I understand you're feeling anxious. Anxiety often comes with physical sensations too - racing heart, tight chest, or restlessness. Are you experiencing any of these symptoms?": "میں سمجھتا ہوں کہ آپ پریشان محسوس کر رہے ہیں۔ اضطراب اکثر جسمانی احساسات کے ساتھ بھی آتا ہے - تیز دل کی دھڑکن، سینے میں جکڑن، یا بے چینی۔ کیا آپ ان میں سے کوئی علامات محسوس کر رہے ہیں؟",
+
+                        // Sadness responses
+                        "I'm really glad you felt comfortable sharing this with me. Feeling sad is a natural human emotion, and it's okay to sit with these feelings. You don't have to carry this alone. What's been making you feel this way?": "مجھے واقعی خوشی ہے کہ آپ نے میرے ساتھ یہ شیئر کرنا مناسب سمجھا۔ اداس محسوس کرنا ایک قدرتی انسانی جذبہ ہے، اور ان احساسات کے ساتھ رہنا ٹھیک ہے۔ آپ کو یہ اکیلے برداشت نہیں کرنا ہے۔ آپ کو ایسا کیوں محسوس ہو رہا ہے؟",
+
+                        // Sleep responses
+                        "Sleep issues can be really frustrating and affect everything else in your life. I understand how exhausting it can be when you can't get good rest. How long have you been having trouble with sleep?": "نیند کے مسائل واقعی پریشان کن ہو سکتے ہیں اور آپ کی زندگی کی ہر چیز کو متاثر کر سکتے ہیں۔ میں سمجھتا ہوں کہ جب آپ کو اچھا آرام نہیں ملتا تو یہ کتنا تھکا دینے والا ہو سکتا ہے۔ کتنے دن سے آپ کو نیند کی پریشانی ہے؟",
+
+                        // General responses
+                        "Hello! I'm so glad you're here. I'm Serenity, and I'm here to support you on your mental wellness journey. How are you feeling today?": "السلام علیکم! مجھے بہت خوشی ہے کہ آپ یہاں ہیں۔ میں سیرینٹی ہوں، اور میں آپ کی ذہنی صحت کے سفر میں آپ کا ساتھ دینے کے لیے یہاں ہوں۔ آج آپ کیسا محسوس کر رہے ہیں؟",
+                        "Hi there! Welcome to our safe space. I'm here to listen and help however I can. What brings you here today?": "سلام! ہماری محفوظ جگہ میں آپ کا خیر مقدم۔ میں یہاں سننے اور جو بھی مدد کر سکوں کرنے کے لیے ہوں۔ آج آپ کو یہاں کیا لایا ہے؟"
+                    },
+
+                    'ks': {
+                        // Stress responses  
+                        "I hear that you're feeling stressed right now. That's completely understandable - stress is our mind's way of responding to challenges. Can you tell me what's been weighing on your mind lately?": "अज़ बुजान छुस ज़ि तुहि अबे तनाव महसूस करान छि। ये बिल्कुल समझनि योग छु - तनाव छु असि दिमागि चुनौतिन जवाब दिनुक तरीका। क्या तुहि बताविथ ज़ि हाल ही मंज़ तुहुंदि दिमागि मंज़ क्या गल छि?",
+
+                        // Anxiety responses
+                        "Anxiety can feel really intense and overwhelming. I want you to know that what you're experiencing is valid, and you're not alone in this. Can you describe what the anxiety feels like for you right now?": "फ़िकर वास्तव मंज़ तीव्र त भारी लगिथ हेकि। अज़ चाहान छुस ज़ि तुहि ज़ानिव ज़ि ज़ि तुहि महसूस करान छि से वैध छु, त तुहि यथि मंज़ अकेले नि छि। क्या तुहि वणिथ हेकिव ज़ि अबे तुहुंदि बाप फ़िकर कैंह लगान छि?",
+
+                        // General responses
+                        "Hello! I'm so glad you're here. I'm Serenity, and I'm here to support you on your mental wellness journey. How are you feeling today?": "आदाब! मे बड़ि खुशि छि ज़ि तुहि येती छि। अज़ छुस सेरेनिटी, त अज़ छुस यत तुहुंदि मानसिक स्वास्थ्य यात्रा मंज़ तुहुंद साथ दिनि बाप। आज़ काल तुहि कैंह महसूस करान छि?"
+                    },
+
+                    'dg': {
+                        // Stress responses
+                        "I hear that you're feeling stressed right now. That's completely understandable - stress is our mind's way of responding to challenges. Can you tell me what's been weighing on your mind lately?": "मैं समझदा ऐं कि तूं अब्बै तनाव महसूस करदा ऐं। ये बिल्कुल समझ च आंदा ऐ - तनाव ऐ असदे दिमाग दा चुनौतियां दा जवाब देणे दा तरीका। क्या तूं दस्सी सकदा कि हाल ही च तेरे मन च की गल्ल ऐ?",
+
+                        // Anxiety responses  
+                        "Anxiety can feel really intense and overwhelming. I want you to know that what you're experiencing is valid, and you're not alone in this. Can you describe what the anxiety feels like for you right now?": "बेचैनी बड़ी तेज़ ते भारी लगी सकदी ऐ। मैं चाहंदा ऐं कि तूं जाणे कि जे तूं महसूस करदा ऐं से सही ऐ, ते तूं इस च अकेला नेईं ऐं। क्या तूं दस्सी सकदा कि अब्बै तेरे लेई बेचैनी किंया लगदी ऐ?",
+
+                        // General responses
+                        "Hello! I'm so glad you're here. I'm Serenity, and I'm here to support you on your mental wellness journey. How are you feeling today?": "सत श्री अकाल! मैगी बड़ी खुशी ऐ कि तूं इत्थै ऐं। मैं सेरेनिटी ऐं, ते मैं तेरी मानसिक सेहत दी यात्रा च तेरा साथ देणे लेई इत्थै ऐं। अज्ज तूं किंया महसूस करदा ऐं?"
+                    }
+                };
+
+                // Find best translation match
+                for (const [english, translated] of Object.entries(translations[language] || {})) {
+                    if (response.includes(english)) {
+                        response = response.replace(english, translated);
+                    }
+                }
+
+                // If no direct translation found, provide a generic multilingual response
+                if (response === arguments[0]) { // No translation occurred
+                    const fallbackResponses = {
+                        'hi': "मैं आपकी बात सुन रहा हूं और आपकी मदद करना चाहता हूं। कृपया मुझे और बताएं।",
+                        'ur': "میں آپ کی بات سن رہا ہوں اور آپ کی مدد کرنا چاہتا ہوں۔ برائے کرم مجھے مزید بتائیں۔",
+                        'ks': "अज़ तुहुंद गल्ल बुजान छुस त तुहुंद मदद करुन चाहान छुस। मेहरबानी करिय मे होर वणिव।",
+                        'dg': "मैं तेरी गल्ल सुणदा ऐं ते तेरी मदद करणा चाहंदा ऐं। कृपया मिगी होर दस्स।"
+                    };
+                    return fallbackResponses[language] || response;
+                }
+
+                return response;
+            }
+
+            getMotivationalQuote() {
+                return this.motivationalQuotes[Math.floor(Math.random() * this.motivationalQuotes.length)];
+            }
+
+            getCheckInQuestion() {
+                return this.checkInQuestions[Math.floor(Math.random() * this.checkInQuestions.length)];
+            }
+        }
+
+        const mentalHealthAI = new MentalHealthAI();
+
+        function appendAiMessage(message, senderType, showTime = true) {
             const messageBubble = document.createElement('div');
             messageBubble.classList.add('ai-message-bubble', senderType);
 
@@ -76,6 +556,14 @@
             textDiv.textContent = message;
 
             contentDiv.appendChild(textDiv);
+
+            if (showTime) {
+                const timeDiv = document.createElement('div');
+                timeDiv.classList.add('message-time');
+                timeDiv.textContent = new Date().toLocaleTimeString();
+                contentDiv.appendChild(timeDiv);
+            }
+
             messageBubble.appendChild(avatarDiv);
             messageBubble.appendChild(contentDiv);
             aiChatMessagesArea.appendChild(messageBubble);
@@ -83,100 +571,230 @@
             aiChatMessagesArea.scrollTop = aiChatMessagesArea.scrollHeight;
         }
 
-        function getAiResponse(userMessage, language) {
-            let response = "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.";
-            const lowerCaseMessage = userMessage.toLowerCase();
-
-            if (lowerCaseMessage.includes('stress') || lowerCaseMessage.includes('तनाव') || lowerCaseMessage.includes('تناؤ') || lowerCaseMessage.includes('डबाव') || lowerCaseMessage.includes('ذہنی دباؤ')) {
-                response = "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!";
-            } else if (lowerCaseMessage.includes('anxiety') || lowerCaseMessage.includes('चिंता') || lowerCaseMessage.includes('پریشانی') || lowerCaseMessage.includes('फिकर') || lowerCaseMessage.includes('بے چینی')) {
-                response = "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?";
-            } else if (lowerCaseMessage.includes('sleep') || lowerCaseMessage.includes('नींद') || lowerCaseMessage.includes('نیند') || lowerCaseMessage.includes('सुत्ता') || lowerCaseMessage.includes('سونا')) {
-                response = "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.";
-            } else if (lowerCaseMessage.includes('sad') || lowerCaseMessage.includes('दुख') || lowerCaseMessage.includes('غم') || lowerCaseMessage.includes('उदास') || lowerCaseMessage.includes('اداس')) {
-                response = "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.";
-            } else if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi') || lowerCaseMessage.includes('नमस्ते') || lowerCaseMessage.includes('السلام علیکم') || lowerCaseMessage.includes('आदाब') || lowerCaseMessage.includes('सत श्री अकाल')) {
-                response = "Hello there! How can I assist you today?";
-            } else if (lowerCaseMessage.includes('help') || lowerCaseMessage.includes('मदद') || lowerCaseMessage.includes('مدد') || lowerCaseMessage.includes('सहायता') || lowerCaseMessage.includes('امداد')) {
-                response = "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.";
-            }
-
-            const translations = {
-                "en": {
-                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!",
-                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?",
-                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.",
-                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.",
-                    "Hello there! How can I assist you today?": "Hello there! How can I assist you today?",
-                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.",
-                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'."
-                },
-                "hi": {
-                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "तनाव मुश्किल हो सकता है। गहरी सांस लेने के व्यायाम या थोड़ी देर टहलने की कोशिश करें। ब्रेक लेना याद रखें!",
-                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "चिंता के लिए, अपनी इंद्रियों पर ध्यान केंद्रित करना मदद कर सकता है। अभी आप क्या देखते हैं, सुनते हैं, सूंघते हैं, स्वाद लेते हैं और महसूस करते हैं?",
-                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "अच्छी नींद बहुत ज़रूरी है। नियमित नींद का कार्यक्रम बना कर रखने और सोने से पहले स्क्रीन से बचने की कोशिश करें।",
-                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "दुखी महसूस करना ठीक है। किसी दोस्त से बात करें, शांत संगीत सुनें, या किसी परामर्शदाता से बात करने पर विचार करें।",
-                    "Hello there! How can I assist you today?": "नमस्ते! मैं आज आपकी कैसे सहायता कर सकता हूं?",
-                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "यदि आपको तत्काल सहायता की आवश्यकता है, तो कृपया पृष्ठ के शीर्ष पर उल्लिखित संकट हेल्पलाइन पर कॉल करें। सामान्य सहायता के लिए, मैं सामान्य मानसिक स्वास्थ्य विषयों पर सुझाव दे सकता हूं।",
-                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "मैं सुनने के लिए यहां हूं। कृपया मुझे और बताएं या 'तनाव', 'चिंता', 'नींद', या 'दुख' टाइप करने का प्रयास करें।"
-                },
-                "ur": {
-                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "ذہنی دباؤ مشکل ہو سکتا ہے۔ گہری سانس لینے کی مشقیں یا تھوڑی دیر ٹہلنے کی کوشش کریں۔ وقفے لینا یاد رکھیں!",
-                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "بے چینی کے لیے، اپنی حواس پر توجہ مرکوز کرنا مدد کر سکتا ہے۔ آپ ابھی کیا دیکھتے ہیں، سنتے ہیں، سونگھتے ہیں، چکھتے ہیں اور محسوس کرتے ہیں؟",
-                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "اچھی نیند بہت ضروری ہے۔ باقاعدہ نیند کا شیڈول برقرار رکھنے اور سونے سے پہلے اسکرین سے بچنے کی کوشش کریں۔",
-                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "اداس محسوس کرنا ٹھیک ہے۔ کسی دوست سے رابطہ کریں، پرسکون موسیقی سنیں، یا کسی مشیر سے بات کرنے پر غور کریں۔",
-                    "Hello there! How can I assist you today?": "السلام علیکم! آج میں آپ کی کیسے مدد کر سکتا ہوں؟",
-                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "اگر آپ کو فوری مدد کی ضرورت ہے تو، براہ کرم صفحے کے اوپر مذکور بحرانی ہیلپ لائن پر کال کریں۔ عمومی مدد کے لیے، میں عام ذہنی صحت کے موضوعات پر تجاویز دے سکتا ہوں۔",
-                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "میں سننے کے لیے یہاں ہوں۔ براہ کرم مجھے مزید بتائیں یا 'تناؤ'، 'پریشانی'، 'نیند'، یا 'غم' ٹائپ کرنے کی کوشش کریں۔"
-                },
-                "ks": {
-                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "तनाव मुश्किल छु। गहर सांह लेअनुक अभ्यास या हल्क सैर करो। आराम करनो याद राखो!",
-                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "फिकर के लेये, अपन होशन पेठ ध्यान दिनी मदद करि सकछु। तुही अबे क्या विनुछु, बुजुछु, गंध लगाछुख, स्वाद लुछु और महसूस करुछु?",
-                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "शोभ नींद जरूरी छु। नियमित नींदुक कार्यक्रम बनाइये और सुत्तनी ब्रोंठ स्क्रीन नेवा छोडे।",
-                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "दुखी महसूस करन ठीक छु। कुनि यारस संग गल करो, शांत संगीत बुजो, या कुनि सलाहकारस संग गल करने सोचो।",
-                    "Hello there! How can I assist you today?": "आदाब! ऐज़ अज़ तुहुंदी कैत मदद करि सकान?",
-                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "अगर तुहि जल्दी मदद चैहीछुख, म्हरबानी करिया पन्नन मेथ लिकिथ संकट हेल्पलाइन पेठ फोन करो। आम मदद के लेये, अज़ आम मानसिक स्वास्थ्य विषयन पेठ सुझाव दिया सकान।",
-                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "अज़ बुजून के लेये यत छुस। मेहरबानी करिया म्यस होर दसो या 'तनाव', 'फिकर', 'नींद', या 'दुख' टाइप करुनुक कोशिश करो।"
-                },
-                "dg": {
-                    "Stress can be tough. Try deep breathing exercises or a short walk. Remember to take breaks!": "डबाव मुश्किल होई सकदा ऐ। गहरी सांह लेण दे अभ्यास या छोटी जी सैर करो। आराम करणा याद रक्खो!",
-                    "For anxiety, focusing on your senses can help. What do you see, hear, smell, taste, and feel right now?": "बेचैनी दे लै, अपनी होशां च ध्यान देणा मदद करी सकदा ऐ। तुस अब्बै क्या दिक्खदे ओ, सुणदे ओ, सुंघदे ओ, स्वाद लैंदे ओ ते महसूस करदे ओ?",
-                    "Good sleep is vital. Try to maintain a regular sleep schedule and avoid screens before bed.": "चंगी नींद बडी जरूरी ऐ। नियमित नींद दा कार्यक्रम बणाई कै रक्खो ते सुत्तणे थमां पैह्ले स्क्रीन थमां बचो।",
-                    "It's okay to feel sad. Reach out to a friend, listen to calming music, or consider talking to a counselor.": "उदास महसूस करणा ठीक ऐ। कुसी दोस्त कन्ने गल करो, शांत संगीत सुणो, या कुसी सलाहकार कन्ने गल करणे दे बारे च सोचो।",
-                    "Hello there! How can I assist you today?": "सत श्री अकाल! अज्ज मैं तुंदी कियां मदद करी सकना?",
-                    "If you need urgent help, please call the crisis helpline mentioned at the top of the page. For general support, I can offer tips on common mental health topics.": "जै तुसां गी तुरंत मदद दी लोड़ ऐ, त कृपा करियै पन्नै दे उप्परले हिस्से च लिख्खी संकट हेल्पलाइन च फोन करो। आम मदद लै, मैं आम मानसिक स्वास्थ्य विषयां पै सुझाव देई सकना।",
-                    "I'm here to listen. Please tell me more or try typing 'stress', 'anxiety', 'sleep', or 'sad'.": "मैं सुणने लै इत्थै ओं। मेहरबानी करियै मिगी होर दस्सो या 'डबाव', 'फिकर', 'नींद', या 'उदास' टाइप करणे दी कोशिश करो।"
-                }
-            };
-
-            return translations[language] && translations[language][response] ? translations[language][response] : response;
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'flex';
+            aiChatMessagesArea.scrollTop = aiChatMessagesArea.scrollHeight;
         }
 
-        sendAiMessageBtn.addEventListener('click', () => {
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function updateSuggestionChipsForLanguage(language) {
+            const suggestions = {
+                'en': [
+                    "I'm feeling stressed",
+                    "I'm having trouble sleeping",
+                    "I feel anxious",
+                    "I'm feeling sad today"
+                ],
+                'hi': [
+                    "मुझे तनाव हो रहा है",
+                    "मुझे नींद नहीं आ रही",
+                    "मुझे चिंता हो रही है",
+                    "मैं आज उदास महसूस कर रहा हूं"
+                ],
+                'ur': [
+                    "مجھے تناؤ ہو رہا ہے",
+                    "مجھے نیند نہیں آ رہی",
+                    "مجھے بے چینی ہو رہی ہے",
+                    "میں آج اداس محسوس کر رہا ہوں"
+                ],
+                'ks': [
+                    "मे तनाव महसूस करान छुस",
+                    "मे सुत्तुन मंज़ मुश्किल छि",
+                    "मे फ़िकर महसूस करान छुस",
+                    "अज़ काल अज़ उदास छुस"
+                ],
+                'dg': [
+                    "मिगी तनाव होआ ऐ",
+                    "मिगी नींद नेईं आंदी",
+                    "मिगी चिंता होआ ऐ",
+                    "अज्ज मैं उदास महसूस करदा ऐं"
+                ]
+            };
+
+            const chipSuggestions = suggestions[language] || suggestions['en'];
+            suggestionChips.innerHTML = '';
+
+            chipSuggestions.forEach(suggestion => {
+                const chip = document.createElement('button');
+                chip.className = 'suggestion-chip';
+                chip.textContent = suggestion;
+                chip.onclick = () => sendSuggestion(suggestion);
+                suggestionChips.appendChild(chip);
+            });
+        }
+
+        function updateSuggestionChips(topic) {
+            const suggestions = {
+                stress: [
+                    "Can you help me with relaxation techniques?",
+                    "I need stress management tips",
+                    "What are some quick stress relievers?",
+                    "Tell me about mindfulness"
+                ],
+                anxiety: [
+                    "What can I do about panic attacks?",
+                    "Help me with grounding techniques",
+                    "I need coping strategies",
+                    "Tell me about breathing exercises"
+                ],
+                sadness: [
+                    "How can I lift my mood?",
+                    "What helps with depression?",
+                    "I need motivation",
+                    "Tell me about self-care"
+                ],
+                default: [
+                    "How can I improve my mood?",
+                    "Tell me about meditation",
+                    "I need some motivation",
+                    "Help me with self-care"
+                ]
+            };
+
+            const chipSuggestions = suggestions[topic] || suggestions.default;
+            suggestionChips.innerHTML = '';
+
+            chipSuggestions.forEach(suggestion => {
+                const chip = document.createElement('button');
+                chip.className = 'suggestion-chip';
+                chip.textContent = suggestion;
+                chip.onclick = () => sendSuggestion(suggestion);
+                suggestionChips.appendChild(chip);
+            });
+        }
+
+        function sendSuggestion(message) {
+            aiMessageInput.value = message;
+            sendMessage();
+        }
+
+        function sendMessage() {
             const userMessage = aiMessageInput.value.trim();
             const selectedLanguage = languageSelect.value;
+
             if (userMessage) {
                 appendAiMessage(userMessage, 'user');
                 aiMessageInput.value = '';
+
+                showTypingIndicator();
+
+                // Simulate more natural response time (1-3 seconds)
+                const responseDelay = 1000 + Math.random() * 2000;
+
                 setTimeout(() => {
-                    const aiResponse = getAiResponse(userMessage, selectedLanguage);
+                    hideTypingIndicator();
+                    const aiResponse = mentalHealthAI.generateResponse(userMessage, selectedLanguage);
                     appendAiMessage(aiResponse, 'ai');
-                }, 500);
+
+                    // Update suggestion chips based on the conversation
+                    const topic = mentalHealthAI.identifyTopic(userMessage.toLowerCase());
+                    if (topic) {
+                        updateSuggestionChips(topic);
+                    }
+
+                    // Occasionally offer additional resources
+                    if (Math.random() > 0.8 && conversationContext.messageCount > 2) {
+                        setTimeout(() => {
+                            const resourceSuggestions = [
+                                "Would you like me to guide you to our breathing exercises?",
+                                "Have you tried our meditation resources?",
+                                "Our community forum might have helpful discussions on this topic.",
+                                "If you'd like professional support, check out our counseling resources."
+                            ];
+                            const suggestion = resourceSuggestions[Math.floor(Math.random() * resourceSuggestions.length)];
+                            appendAiMessage(suggestion, 'ai');
+                        }, 2000);
+                    }
+                }, responseDelay);
             }
-        });
+        }
+
+        sendAiMessageBtn.addEventListener('click', sendMessage);
 
         aiMessageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                sendAiMessageBtn.click();
+                sendMessage();
             }
         });
 
+        // Handle language changes
         languageSelect.addEventListener('change', () => {
             const selectedLanguage = languageSelect.value;
-            aiChatMessagesArea.innerHTML = '';
-            const initialMessage = getAiResponse("hello", selectedLanguage);
-            appendAiMessage(initialMessage, 'ai');
+            const welcomeMessages = {
+                'en': "Language updated to English! I'm here to support you. How are you feeling today?",
+                'hi': "भाषा हिंदी में अपडेट हो गई! मैं आपका साथ देने के लिए यहां हूं। आज आप कैसा महसूस कर रहे हैं?",
+                'ur': "زبان اردو میں اپ ڈیٹ ہو گئی! میں آپ کا ساتھ دینے کے لیے یہاں ہوں۔ آج آپ کیسا محسوس کر رہے ہیں؟",
+                'ks': "ज़बान कॉशुर मंज़ अपडेट गो! अज़ छुस तुहुंद साथ दिनि बाप यत। आज़ काल तुहि कैंह महसूस करान छि?",
+                'dg': "भाषा डोगरी च अपडेट होई गेई! मैं तेरा साथ देणे लेई इत्थै ऐं। अज्ज तूं किंया महसूस करदा ऐं?"
+            };
+
+            appendAiMessage(welcomeMessages[selectedLanguage] || welcomeMessages['en'], 'ai');
+
+            // Update suggestion chips for the selected language
+            updateSuggestionChipsForLanguage(selectedLanguage);
         });
+
+        // Auto-suggestions based on time of day
+        window.addEventListener('load', () => {
+            const hour = new Date().getHours();
+            const selectedLanguage = languageSelect.value;
+
+            const timeBasedMessages = {
+                'en': {
+                    morning: "Good morning! How are you starting your day?",
+                    afternoon: "Good afternoon! How has your day been so far?",
+                    evening: "Good evening! How are you winding down today?"
+                },
+                'hi': {
+                    morning: "सुप्रभात! आप अपना दिन कैसे शुरू कर रहे हैं?",
+                    afternoon: "नमस्कार! अब तक आपका दिन कैसा रहा है?",
+                    evening: "शुभ संध्या! आज आप कैसे आराम कर रहे हैं?"
+                },
+                'ur': {
+                    morning: "صبح بخیر! آپ اپنا دن کیسے شروع کر رہے ہیں؟",
+                    afternoon: "دوپہر بخیر! اب تک آپ کا دن کیسا رہا ہے؟",
+                    evening: "شام بخیر! آج آپ کیسے آرام کر رہے ہیں؟"
+                },
+                'ks': {
+                    morning: "शुभ प्रभात! तुहि अपनाह दोह कैंह शुरू करान छि?",
+                    afternoon: "नमस्कार! अबे तक तुहुंद दोह कैंह गो?",
+                    evening: "शुभ संध्या! आज़ काल तुहि कैंह आराम करान छि?"
+                },
+                'dg': {
+                    morning: "शुभ प्रभात! तूं अपना दिन किंया शुरू करदा ऐं?",
+                    afternoon: "नमस्कार! अब्बै तक तेरा दिन किंया गया ऐ?",
+                    evening: "शुभ संध्या! अज्ज तूं किंया आराम करदा ऐं?"
+                }
+            };
+
+            let timeBasedSuggestion = '';
+            const messages = timeBasedMessages[selectedLanguage] || timeBasedMessages['en'];
+
+            if (hour < 12) {
+                timeBasedSuggestion = messages.morning;
+            } else if (hour < 17) {
+                timeBasedSuggestion = messages.afternoon;
+            } else {
+                timeBasedSuggestion = messages.evening;
+            }
+
+            setTimeout(() => {
+                appendAiMessage(timeBasedSuggestion, 'ai');
+            }, 3000);
+        });
+
+        // Periodic check-ins for longer conversations
+        setInterval(() => {
+            if (conversationContext.messageCount > 10 && Math.random() > 0.7) {
+                const checkIn = mentalHealthAI.getCheckInQuestion();
+                setTimeout(() => {
+                    appendAiMessage("I wanted to check in with you: " + checkIn, 'ai');
+                }, 1000);
+            }
+        }, 300000); // Every 5 minutes
     </script>
 </body>
 
