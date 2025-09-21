@@ -20,7 +20,7 @@ def login():
     error = None
     if request.method == 'POST':
         # UPDATED PASSWORD CHECK
-        if request.form.get('username') == 'admin' and request.form.get('password') == 'password123':
+        if request.form.get('username') == 'admin' and request.form.get('password') == '123':
             session['admin_user'] = request.form.get('username')
             return redirect(url_for('admin_dashboard'))
         else:

@@ -13,7 +13,6 @@
             margin: 0;
             font-family: 'Poppins', sans-serif;
             background-color: #f0eff4;
-            /* Changed background color */
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,7 +25,6 @@
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
-            /* Adjusted box-shadow for a softer look */
             text-align: center;
         }
 
@@ -34,7 +32,6 @@
             margin-bottom: 25px;
             font-weight: 700;
             color: #4a4a4a;
-            /* Adjusted heading color */
         }
 
         .form-group {
@@ -47,7 +44,6 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: #555;
-            /* Adjusted label color */
         }
 
         .form-group input {
@@ -57,11 +53,12 @@
             border-radius: 8px;
             outline: none;
             transition: border 0.3s ease;
+            box-sizing: border-box;
+            /* Added for consistent sizing */
         }
 
         .form-group input:focus {
             border: 1px solid #7f56d9;
-            /* Changed focus color to match the theme */
         }
 
         .btn {
@@ -70,7 +67,6 @@
             border: none;
             border-radius: 8px;
             background: #7f56d9;
-            /* Changed button color to purple from the theme */
             color: #fff;
             font-size: 16px;
             font-weight: 600;
@@ -80,7 +76,6 @@
 
         .btn:hover {
             background: #6941c6;
-            /* Darker purple for hover effect */
         }
 
         .error {
@@ -90,6 +85,20 @@
             margin-bottom: 15px;
             border-radius: 5px;
             font-size: 14px;
+        }
+
+        /* Style for the demo credentials hint */
+        .demo-credentials {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .demo-credentials p {
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -115,6 +124,11 @@
 
             <button type="submit" class="btn">Sign In</button>
         </form>
+
+        <div class="demo-credentials">
+            <p>For demonstration purposes:</p>
+            <p><strong>Username:</strong> admin &nbsp;&nbsp;&nbsp; <strong>Password:</strong> 123</p>
+        </div>
     </div>
 </body>
 

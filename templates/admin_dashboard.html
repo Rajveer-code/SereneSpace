@@ -5,10 +5,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - SereneSpace</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-primary: #2d3748;
+      --text-secondary: #718096;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -17,96 +37,182 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #f0eff4;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .dashboard-container {
+      display: flex;
       min-height: 100vh;
-      color: #333;
     }
 
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
       padding: 2rem;
-    }
-
-    /* Brand Header */
-    .brand-header {
-      text-align: center;
-      margin-bottom: 3rem;
-      padding: 2rem 0;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .logo {
-      font-size: 3rem;
-      font-weight: 700;
-      color: #4a4a4a;
-      text-shadow: none;
-      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-gradient);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-    }
-
-    .logo i {
-      font-size: 3rem;
-      color: #7f56d9;
-    }
-
-    .brand-subtitle {
-      color: #666;
-      font-size: 1.1rem;
-      font-weight: 300;
-    }
-
-    /* Dashboard Welcome */
-    .dashboard-welcome {
-      background: #ffffff;
-      border-radius: 25px;
-      padding: 3rem;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-      margin-bottom: 3rem;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .dashboard-welcome h1 {
-      font-size: 2.5rem;
-      color: #6941c6;
-      margin-bottom: 1rem;
-      font-weight: 700;
-    }
-
-    .dashboard-welcome p {
+      color: white;
       font-size: 1.2rem;
-      color: #666;
+    }
+
+    .sidebar-nav {
+      padding: 1rem 0;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+
+    .nav-section {
       margin-bottom: 1.5rem;
     }
 
-    .dashboard-stats {
-      display: inline-block;
-      background: linear-gradient(135deg, #7f56d9, #6941c6);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      font-weight: 500;
-      box-shadow: 0 8px 25px rgba(127, 86, 217, 0.3);
+    .nav-section-title {
+      padding: 0 1rem 0.5rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 0.75rem;
     }
 
-    /* Stats Grid */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    .nav-item {
+      margin: 0.25rem 1rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--primary-gradient);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      overflow-x: hidden;
+    }
+
+    .top-header {
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: between;
+      align-items: center;
       gap: 2rem;
-      margin: 3rem 0;
+    }
+
+    .header-left h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-left p {
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-left: auto;
+    }
+
+    .time-display {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .admin-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .profile-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--secondary-gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .content-area {
+      padding: 2rem;
+    }
+
+    /* Statistics Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .stat-card {
-      background: #ffffff;
-      padding: 2.5rem;
+      background: var(--bg-card);
       border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-      text-align: center;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -119,446 +225,787 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, #7f56d9, #6941c6);
+      background: var(--primary-gradient);
     }
 
     .stat-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
     }
 
-    .stat-card h3 {
-      color: #6941c6;
-      margin-bottom: 1.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      color: white;
+      font-size: 1.25rem;
     }
 
-    .stat-card .stat-number {
-      font-size: 3rem;
-      font-weight: 700;
-      color: #7f56d9;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 2px 10px rgba(127, 86, 217, 0.2);
+    .stat-icon.users {
+      background: var(--primary-gradient);
     }
 
-    .stat-card .stat-label {
-      color: #666;
-      font-size: 1rem;
-      font-weight: 400;
+    .stat-icon.sessions {
+      background: var(--success-gradient);
     }
 
-    /* Section Headers */
-    .section-header {
+    .stat-icon.checkins {
+      background: var(--warning-gradient);
+    }
+
+    .stat-icon.crisis {
+      background: var(--danger-gradient);
+    }
+
+    .stat-trend {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
-      background: #ffffff;
-      padding: 1.5rem 2rem;
-      border-radius: 15px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .trend-up {
+      color: #10b981;
+    }
+
+    .trend-down {
+      color: #ef4444;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Alert Cards */
+    .alert-section {
+      margin: 2rem 0;
     }
 
     .section-title {
-      font-size: 1.8rem;
-      color: #4a4a4a;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .alerts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    .alert-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-md);
+      border-left: 4px solid;
+      transition: all 0.2s ease;
+    }
+
+    .alert-card:hover {
+      transform: translateX(4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .alert-card.critical {
+      border-left-color: #ef4444;
+    }
+
+    .alert-card.warning {
+      border-left-color: #f59e0b;
+    }
+
+    .alert-card.info {
+      border-left-color: #3b82f6;
+    }
+
+    .alert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .alert-title {
       font-weight: 600;
-      text-shadow: none;
+      font-size: 0.95rem;
     }
 
-    #timeRange {
-      background: #f0eff4;
-      border: 1px solid #ddd;
-      padding: 0.75rem 1.5rem;
-      border-radius: 25px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
+    .alert-time {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
     }
 
-    #timeRange:hover {
-      background: white;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    .alert-description {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
     }
 
     /* Quick Actions */
     .quick-actions {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin: 3rem 0;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
     }
 
-    .quick-action-btn {
-      background: linear-gradient(135deg, #7f56d9, #6941c6);
-      color: white;
-      padding: 2rem;
-      border-radius: 20px;
-      text-decoration: none;
+    .action-btn {
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
       text-align: center;
+      text-decoration: none;
+      color: var(--text-primary);
       transition: all 0.3s ease;
-      box-shadow: 0 10px 30px rgba(127, 86, 217, 0.3);
+      position: relative;
+      overflow: hidden;
     }
 
-    .quick-action-btn:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 50px rgba(127, 86, 217, 0.4);
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: transparent;
     }
 
-    .quick-action-btn i {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+    .action-btn.primary:hover {
+      background: var(--primary-gradient);
+      color: white;
+    }
+
+    .action-btn.secondary:hover {
+      background: var(--secondary-gradient);
+      color: white;
+    }
+
+    .action-btn.success:hover {
+      background: var(--success-gradient);
+      color: white;
+    }
+
+    .action-btn.danger:hover {
+      background: var(--danger-gradient);
+      color: white;
+    }
+
+    .action-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
       display: block;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
 
-    .quick-action-btn span {
-      font-size: 1.1rem;
+    .action-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* Charts Section */
+    .charts-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 350px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .chart-wrapper canvas {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .time-selector {
+      display: flex;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 0.25rem;
+    }
+
+    .time-option {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
       font-weight: 500;
     }
 
-    /* Chart Container */
-    .chart-container {
-      background: #ffffff;
-      padding: 3rem;
-      border-radius: 25px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-      margin: 3rem 0;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+    .time-option.active {
+      background: var(--primary-gradient);
+      color: white;
     }
 
     /* Recent Activity */
-    .recent-activity {
-      background: #ffffff;
-      padding: 3rem;
-      border-radius: 25px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-      margin: 3rem 0;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+    .activity-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
     }
 
     .activity-item {
       display: flex;
-      align-items: center;
-      padding: 1.5rem 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      gap: 1.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .activity-item:hover {
-      transform: translateX(10px);
-      background: rgba(127, 86, 217, 0.05);
-      border-radius: 10px;
-      margin: 0 -1rem;
-      padding: 1.5rem 1rem;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .activity-item:last-child {
       border-bottom: none;
     }
 
-    .activity-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+    .activity-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .activity-icon.chat {
-      background: linear-gradient(135deg, #7f56d9, #6941c6);
       color: white;
-    }
-
-    .activity-icon.user {
-      background: linear-gradient(135deg, #48b8d0, #0096c7);
-      color: white;
-    }
-
-    .activity-icon.alert {
-      background: linear-gradient(135deg, #e63946, #d62828);
-      color: white;
+      font-size: 1rem;
+      flex-shrink: 0;
     }
 
     .activity-content h4 {
-      margin: 0 0 0.5rem 0;
-      color: #333;
+      font-size: 0.95rem;
       font-weight: 600;
-      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
     }
 
     .activity-content p {
-      margin: 0;
-      color: #666;
-      font-size: 0.95rem;
-      line-height: 1.5;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
     }
 
-    /* Buttons */
-    .btn {
-      background: #6941c6;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 25px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      border: none;
+    /* System Health */
+    .health-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
     }
 
-    .btn:hover {
-      background: #5632a8;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(105, 65, 198, 0.3);
-    }
-
-    /* Footer */
-    .footer {
-      background: transparent;
-      padding: 2rem 0;
+    .health-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
       text-align: center;
-      margin-top: 4rem;
+      border: 1px solid var(--border-color);
     }
 
-    .footer p {
-      color: #666;
+    .health-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+    }
+
+    .health-status {
+      font-size: 1.25rem;
+      font-weight: 700;
       margin-bottom: 0.5rem;
     }
 
+    .status-online {
+      color: #10b981;
+    }
+
+    .status-warning {
+      color: #f59e0b;
+    }
+
+    .status-offline {
+      color: #ef4444;
+    }
+
     /* Responsive Design */
+    @media (max-width: 1024px) {
+      .charts-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 768px) {
-      .container {
+      .sidebar {
+        width: 0;
+        overflow: hidden;
+      }
+
+      .content-area {
         padding: 1rem;
       }
 
-      .logo {
-        font-size: 2rem;
-      }
-
-      .logo i {
-        font-size: 2rem;
-      }
-
-      .dashboard-welcome {
-        padding: 2rem;
-      }
-
-      .dashboard-welcome h1 {
-        font-size: 1.8rem;
-      }
-
-      .dashboard-grid {
+      .stats-grid,
+      .quick-actions,
+      .health-grid {
         grid-template-columns: 1fr;
       }
 
-      .quick-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .section-header {
+      .top-header {
         flex-direction: column;
+        align-items: flex-start;
         gap: 1rem;
-        text-align: center;
       }
+    }
+
+    /* Loading Animation */
+    .loading {
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-gradient);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      z-index: 1001;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .notification.show {
+      transform: translateX(0);
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="brand-header">
-      <div class="logo">
-        <i class="fa-solid fa-leaf"></i>
-        SereneSpace
-      </div>
-      <div class="brand-subtitle">Mental Health & Wellness Platform</div>
-    </div>
-
-    <div class="dashboard-welcome">
-      <h1>Welcome back, <span>{{ session['admin_user'] }}</span></h1>
-      <p>Here's what's happening with SereneSpace today</p>
-      <div class="dashboard-stats">
-        <i class="fa-solid fa-clock"></i>
-        <span id="currentTime"></span>
-      </div>
-    </div>
-
-    <div class="section-header">
-      <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> Overview Statistics</h2>
-      <select id="timeRange">
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-      </select>
-    </div>
-
-    <div class="dashboard-grid">
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-users"></i> Active Users</h3>
-        <div class="stat-number" id="activeUsers">1,247</div>
-        <div class="stat-label">Currently online</div>
-      </div>
-
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-comments"></i> AI Chat Sessions</h3>
-        <div class="stat-number" id="chatSessions">856</div>
-        <div class="stat-label">Sessions today</div>
-      </div>
-
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-heart"></i> Wellness Check-ins</h3>
-        <div class="stat-number" id="checkIns">432</div>
-        <div class="stat-label">Completed today</div>
-      </div>
-
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-exclamation-triangle"></i> Crisis Interventions</h3>
-        <div class="stat-number" id="crisisCount">3</div>
-        <div class="stat-label">Requiring attention</div>
-      </div>
-    </div>
-
-    <div class="section-header">
-      <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>
-    </div>
-
-    <div class="quick-actions">
-      <a href="#broadcast" class="quick-action-btn">
-        <i class="fa-solid fa-bullhorn"></i>
-        <span>Send Broadcast</span>
-      </a>
-      <a href="#add-resource" class="quick-action-btn">
-        <i class="fa-solid fa-plus-circle"></i>
-        <span>Add Resource</span>
-      </a>
-      <a href="#view-reports" class="quick-action-btn">
-        <i class="fa-solid fa-chart-bar"></i>
-        <span>Generate Report</span>
-      </a>
-      <a href="#crisis-alerts" class="quick-action-btn" style="background: linear-gradient(135deg, #e63946, #d62828);">
-        <i class="fa-solid fa-exclamation-triangle"></i>
-        <span>Crisis Alerts</span>
-      </a>
-    </div>
-
-    <div class="section-header">
-      <h2 class="section-title"><i class="fa-solid fa-analytics"></i> Usage Analytics</h2>
-    </div>
-
-    <div class="chart-container">
-      <canvas id="usageChart" width="400" height="200"></canvas>
-    </div>
-
-    <div class="section-header">
-      <h2 class="section-title"><i class="fa-solid fa-clock"></i> Recent Activity</h2>
-      <a href="#view-all" class="btn">View All</a>
-    </div>
-
-    <div class="recent-activity">
-      <div class="activity-item">
-        <div class="activity-icon chat">
-          <i class="fa-solid fa-robot"></i>
-        </div>
-        <div class="activity-content">
-          <h4>AI Chat Session Completed</h4>
-          <p>Anonymous user completed stress management session • 5 minutes ago</p>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span>SereneSpace</span>
         </div>
       </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Main Platform</div>
+          <div class="nav-item">
+            <a href="/" class="nav-link">
+              <i class="fa-solid fa-home"></i>
+              <span>Welcome Home</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/dashboard" class="nav-link">
+              <i class="fa-solid fa-chart-pie"></i>
+              <span>User Dashboard</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/admin" class="nav-link active">
+              <i class="fa-solid fa-shield-alt"></i>
+              <span>Admin Dashboard</span>
+            </a>
+          </div>
+        </div>
 
-      <div class="activity-item">
-        <div class="activity-icon user">
-          <i class="fa-solid fa-user-plus"></i>
+        <div class="nav-section">
+          <div class="nav-section-title">Mental Health Tools</div>
+          <div class="nav-item">
+            <a href="/ai-chat" class="nav-link">
+              <i class="fa-solid fa-robot"></i>
+              <span>AI Chat Support</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/assessment" class="nav-link">
+              <i class="fa-solid fa-clipboard-list"></i>
+              <span>Mental Health Assessment</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/assessment-results" class="nav-link">
+              <i class="fa-solid fa-chart-bar"></i>
+              <span>Assessment Results</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/mood-checkin" class="nav-link">
+              <i class="fa-solid fa-heart"></i>
+              <span>Daily Mood Check-in</span>
+            </a>
+          </div>
         </div>
-        <div class="activity-content">
-          <h4>New User Registration</h4>
-          <p>Student from Engineering Department joined • 12 minutes ago</p>
-        </div>
-      </div>
 
-      <div class="activity-item">
-        <div class="activity-icon alert">
-          <i class="fa-solid fa-exclamation-triangle"></i>
+        <div class="nav-section">
+          <div class="nav-section-title">Support Services</div>
+          <div class="nav-item">
+            <a href="/counseling" class="nav-link">
+              <i class="fa-solid fa-user-doctor"></i>
+              <span>Counselor Booking</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/community" class="nav-link">
+              <i class="fa-solid fa-users"></i>
+              <span>Peer Support Forum</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/emergency" class="nav-link">
+              <i class="fa-solid fa-phone"></i>
+              <span>Crisis Helpline</span>
+            </a>
+          </div>
         </div>
-        <div class="activity-content">
-          <h4>Crisis Alert Resolved</h4>
-          <p>Emergency intervention successfully completed • 1 hour ago</p>
-        </div>
-      </div>
 
-      <div class="activity-item">
-        <div class="activity-icon chat">
-          <i class="fa-solid fa-comments"></i>
+        <div class="nav-section">
+          <div class="nav-section-title">Wellness Resources</div>
+          <div class="nav-item">
+            <a href="/breathing-exercise" class="nav-link">
+              <i class="fa-solid fa-leaf"></i>
+              <span>Breathing Exercises</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a href="/activities" class="nav-link">
+              <i class="fa-solid fa-gamepad"></i>
+              <span>Wellness Games</span>
+            </a>
+          </div>
         </div>
-        <div class="activity-content">
-          <h4>Forum Activity Spike</h4>
-          <p>Peer support forum seeing increased engagement • 2 hours ago</p>
-        </div>
-      </div>
 
-      <div class="activity-item">
-        <div class="activity-icon user">
-          <i class="fa-solid fa-heart"></i>
+        <div class="nav-section">
+          <div class="nav-section-title">Account</div>
+          <div class="nav-item">
+            <a href="/login" class="nav-link">
+              <i class="fa-solid fa-sign-in-alt"></i>
+              <span>Login / Logout</span>
+            </a>
+          </div>
         </div>
-        <div class="activity-content">
-          <h4>Wellness Check-in Milestone</h4>
-          <p>1000+ daily check-ins completed this week • 3 hours ago</p>
-        </div>
-      </div>
+      </nav>
     </div>
 
-    <div class="section-header">
-      <h2 class="section-title"><i class="fa-solid fa-server"></i> System Health</h2>
-    </div>
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="top-header">
+        <div class="header-left">
+          <h1>Admin Dashboard</h1>
+          <p>Monitor and manage your digital mental health platform</p>
+        </div>
+        <div class="header-right">
+          <div class="time-display" id="currentTime">
+            Loading...
+          </div>
+          <div class="admin-profile">
+            <div class="profile-avatar">AD</div>
+            <div>
+              <div style="font-weight: 600; font-size: 0.875rem;">Admin User</div>
+              <div style="color: var(--text-secondary); font-size: 0.75rem;">Department of Student Welfare</div>
+            </div>
+          </div>
+        </div>
+      </header>
 
-    <div class="dashboard-grid">
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-server"></i> Server Status</h3>
-        <div class="stat-number" style="color: #52b788;">99.9%</div>
-        <div class="stat-label">Uptime</div>
-      </div>
+      <main class="content-area">
+        <!-- Statistics Grid -->
+        <div class="stats-grid loading">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon users">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div class="stat-trend trend-up">
+                <i class="fa-solid fa-arrow-up"></i>
+                <span>+12%</span>
+              </div>
+            </div>
+            <div class="stat-number" id="activeUsers">1,247</div>
+            <div class="stat-label">Active Students</div>
+          </div>
 
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-database"></i> Database</h3>
-        <div class="stat-number" style="color: #48b8d0;">Healthy</div>
-        <div class="stat-label">All systems operational</div>
-      </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon sessions">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="stat-trend trend-up">
+                <i class="fa-solid fa-arrow-up"></i>
+                <span>+8%</span>
+              </div>
+            </div>
+            <div class="stat-number" id="chatSessions">856</div>
+            <div class="stat-label">AI Chat Sessions Today</div>
+          </div>
 
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-shield-alt"></i> Security</h3>
-        <div class="stat-number" style="color: #f77f00;">Active</div>
-        <div class="stat-label">No threats detected</div>
-      </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon checkins">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <div class="stat-trend trend-up">
+                <i class="fa-solid fa-arrow-up"></i>
+                <span>+15%</span>
+              </div>
+            </div>
+            <div class="stat-number" id="checkIns">432</div>
+            <div class="stat-label">Wellness Check-ins</div>
+          </div>
 
-      <div class="stat-card">
-        <h3><i class="fa-solid fa-backup"></i> Backups</h3>
-        <div class="stat-number" style="color: #7f56d9;">Latest</div>
-        <div class="stat-label">2 hours ago</div>
-      </div>
-    </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon crisis">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+              </div>
+              <div class="stat-trend trend-down">
+                <i class="fa-solid fa-arrow-down"></i>
+                <span>-20%</span>
+              </div>
+            </div>
+            <div class="stat-number" id="crisisCount">3</div>
+            <div class="stat-label">Crisis Interventions</div>
+          </div>
+        </div>
 
-    <div class="footer">
-      <p>&copy; 2025 SereneSpace | Dept. of Student Welfare</p>
-      <p><i class="fa-solid fa-phone"></i> Emergency Helpline: 1800-123-456</p>
+        <!-- Critical Alerts Section -->
+        <div class="alert-section">
+          <h2 class="section-title">
+            <i class="fa-solid fa-bell"></i>
+            Critical Alerts
+          </h2>
+          <div class="alerts-grid">
+            <div class="alert-card critical">
+              <div class="alert-header">
+                <div class="alert-title">High-Risk Student Detected</div>
+                <div class="alert-time">2 min ago</div>
+              </div>
+              <div class="alert-description">
+                PHQ-9 score of 23 detected. Automatic counselor notification sent.
+              </div>
+            </div>
+            <div class="alert-card warning">
+              <div class="alert-header">
+                <div class="alert-title">Unusual Activity Pattern</div>
+                <div class="alert-time">15 min ago</div>
+              </div>
+              <div class="alert-description">
+                40% increase in anxiety-related chat sessions in Engineering dept.
+              </div>
+            </div>
+            <div class="alert-card info">
+              <div class="alert-header">
+                <div class="alert-title">System Update Completed</div>
+                <div class="alert-time">1 hour ago</div>
+              </div>
+              <div class="alert-description">
+                AI model updated with latest therapeutic protocols.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <a href="#send-broadcast" class="action-btn primary">
+            <i class="fa-solid fa-bullhorn action-icon"></i>
+            <span class="action-text">Send Broadcast</span>
+          </a>
+          <a href="#add-resource" class="action-btn secondary">
+            <i class="fa-solid fa-plus-circle action-icon"></i>
+            <span class="action-text">Add Resource</span>
+          </a>
+          <a href="#generate-report" class="action-btn success">
+            <i class="fa-solid fa-chart-bar action-icon"></i>
+            <span class="action-text">Generate Report</span>
+          </a>
+          <a href="#crisis-management" class="action-btn danger">
+            <i class="fa-solid fa-life-ring action-icon"></i>
+            <span class="action-text">Crisis Management</span>
+          </a>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title">Platform Usage Analytics</h3>
+              <div class="time-selector">
+                <button class="time-option active" data-range="today">Today</button>
+                <button class="time-option" data-range="week">Week</button>
+                <button class="time-option" data-range="month">Month</button>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="usageChart"></canvas>
+            </div>
+          </div>
+
+          <div class="activity-card">
+            <h3 class="chart-title" style="margin-bottom: 1.5rem;">Recent Activity</h3>
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--primary-gradient);">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="activity-content">
+                <h4>AI Session Completed</h4>
+                <p>Stress management session • 2 min ago</p>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--success-gradient);">
+                <i class="fa-solid fa-user-plus"></i>
+              </div>
+              <div class="activity-content">
+                <h4>New Student Registration</h4>
+                <p>Engineering Department • 8 min ago</p>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--warning-gradient);">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+              <div class="activity-content">
+                <h4>Counselor Appointment</h4>
+                <p>Scheduled for tomorrow • 15 min ago</p>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--danger-gradient);">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+              </div>
+              <div class="activity-content">
+                <h4>Crisis Alert Resolved</h4>
+                <p>Emergency protocol activated • 1 hour ago</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="section-title">
+          <i class="fa-solid fa-server"></i>
+          System Health Monitoring
+        </div>
+        <div class="health-grid">
+          <div class="health-card">
+            <div class="health-icon" style="background: var(--success-gradient);">
+              <i class="fa-solid fa-server"></i>
+            </div>
+            <div class="health-status status-online">99.8%</div>
+            <div class="stat-label">Server Uptime</div>
+          </div>
+          <div class="health-card">
+            <div class="health-icon" style="background: var(--primary-gradient);">
+              <i class="fa-solid fa-database"></i>
+            </div>
+            <div class="health-status status-online">Healthy</div>
+            <div class="stat-label">Database Status</div>
+          </div>
+          <div class="health-card">
+            <div class="health-icon" style="background: var(--warning-gradient);">
+              <i class="fa-solid fa-shield-alt"></i>
+            </div>
+            <div class="health-status status-online">Secure</div>
+            <div class="stat-label">Security Status</div>
+          </div>
+          <div class="health-card">
+            <div class="health-icon" style="background: var(--secondary-gradient);">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div class="health-status status-online">Active</div>
+            <div class="stat-label">AI Services</div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 
   <script>
-    // Update current time
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function () {
+      initializeTime();
+      initializeCounters();
+      initializeChart();
+      setupEventListeners();
+    });
+
+    // Time display
+    function initializeTime() {
+      updateTime();
+      setInterval(updateTime, 1000);
+    }
+
     function updateTime() {
       const now = new Date();
       const timeString = now.toLocaleString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
+        weekday: 'short',
+        month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
@@ -566,193 +1013,373 @@
       document.getElementById('currentTime').textContent = timeString;
     }
 
-    updateTime();
-    setInterval(updateTime, 1000);
+    // Animated counters
+    function initializeCounters() {
+      const counters = [
+        { id: 'activeUsers', target: 1247 },
+        { id: 'chatSessions', target: 856 },
+        { id: 'checkIns', target: 432 },
+        { id: 'crisisCount', target: 3 }
+      ];
 
-    // Animate counters
-    function animateCounter(elementId, targetValue) {
-      const element = document.getElementById(elementId);
-      const startValue = 0;
-      const duration = 2000;
-      const increment = targetValue / (duration / 16);
-      let currentValue = startValue;
-
-      const timer = setInterval(() => {
-        currentValue += increment;
-        if (currentValue >= targetValue) {
-          element.textContent = targetValue.toLocaleString();
-          clearInterval(timer);
-        } else {
-          element.textContent = Math.floor(currentValue).toLocaleString();
-        }
-      }, 16);
+      counters.forEach(counter => {
+        animateCounter(counter.id, counter.target);
+      });
     }
 
-    // Initialize counters when page loads
-    document.addEventListener('DOMContentLoaded', function () {
-      animateCounter('activeUsers', 1247);
-      animateCounter('chatSessions', 856);
-      animateCounter('checkIns', 432);
-      animateCounter('crisisCount', 3);
-    });
+    function animateCounter(elementId, targetValue) {
+      const element = document.getElementById(elementId);
+      const duration = 2000;
+      const startTime = performance.now();
 
-    // Usage Analytics Chart
-    const ctx = document.getElementById('usageChart').getContext('2d');
-    const usageChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        datasets: [{
-          label: 'AI Chat Sessions',
-          data: [120, 190, 300, 500, 200, 300, 450],
-          borderColor: '#7f56d9',
-          /* Purple */
-          backgroundColor: 'rgba(127, 86, 217, 0.1)',
-          /* Purple */
-          tension: 0.4,
-          fill: true,
-          borderWidth: 3
-        }, {
-          label: 'Forum Activity',
-          data: [80, 150, 200, 350, 180, 250, 300],
-          borderColor: '#48b8d0',
-          /* Teal */
-          backgroundColor: 'rgba(72, 184, 208, 0.1)',
-          /* Teal */
-          tension: 0.4,
-          fill: true,
-          borderWidth: 3
-        }, {
-          label: 'Wellness Check-ins',
-          data: [60, 120, 180, 280, 150, 200, 250],
-          borderColor: '#f77f00',
-          /* Orange */
-          backgroundColor: 'rgba(247, 127, 0, 0.1)',
-          /* Orange */
-          tension: 0.4,
-          fill: true,
-          borderWidth: 3
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Platform Usage Trends',
-            font: {
-              size: 18,
-              weight: 'bold'
-            },
-            color: '#6941c6' /* Dark Purple */
+      function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing function for smooth animation
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        const currentValue = Math.floor(targetValue * easeOutCubic);
+
+        element.textContent = currentValue.toLocaleString();
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        }
+      }
+
+      requestAnimationFrame(updateCounter);
+    }
+
+    // Chart initialization
+    function initializeChart() {
+      const ctx = document.getElementById('usageChart').getContext('2d');
+
+      window.usageChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'AI Chat Sessions',
+            data: [120, 190, 300, 500, 320, 280, 450],
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }, {
+            label: 'Wellness Check-ins',
+            data: [80, 150, 200, 350, 240, 200, 320],
+            borderColor: '#f093fb',
+            backgroundColor: 'rgba(240, 147, 251, 0.1)',
+            tension: 0.4,
+            fill: true,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }, {
+            label: 'Counselor Appointments',
+            data: [30, 60, 80, 120, 90, 70, 110],
+            borderColor: '#4facfe',
+            backgroundColor: 'rgba(79, 172, 254, 0.1)',
+            tension: 0.4,
+            fill: true,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 10,
+              bottom: 10,
+              left: 10,
+              right: 10
+            }
           },
-          legend: {
-            position: 'top',
-            labels: {
-              usePointStyle: true,
-              padding: 20,
-              font: {
-                size: 14
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'start',
+              labels: {
+                usePointStyle: true,
+                padding: 15,
+                font: {
+                  size: 12,
+                  weight: '500'
+                },
+                boxWidth: 8,
+                boxHeight: 8
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: 'white',
+              bodyColor: 'white',
+              borderColor: '#667eea',
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: true,
+              titleFont: {
+                size: 13
+              },
+              bodyFont: {
+                size: 12
               }
             }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(0, 0, 0, 0.05)'
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 600,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)',
+                drawBorder: false
+              },
+              ticks: {
+                color: '#718096',
+                font: {
+                  size: 11
+                },
+                maxTicksLimit: 6,
+                padding: 8
+              }
             },
-            ticks: {
-              color: '#666'
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#718096',
+                font: {
+                  size: 11
+                },
+                padding: 8
+              }
             }
           },
-          x: {
-            grid: {
-              display: false
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
+          elements: {
+            line: {
+              tension: 0.4
             },
-            ticks: {
-              color: '#666'
+            point: {
+              radius: 4,
+              hoverRadius: 6
             }
           }
         }
-      }
-    });
+      });
+    }
 
-    // Time range selector
-    document.getElementById('timeRange').addEventListener('change', function () {
-      const range = this.value;
-      console.log('Time range changed to:', range);
+    // Event listeners
+    function setupEventListeners() {
+      // Time range selector
+      document.querySelectorAll('.time-option').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.time-option').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          updateChartData(this.dataset.range);
+        });
+      });
 
-      const newData = {
-        'today': [30, 45, 60, 80, 70, 90, 120],
-        'week': [120, 190, 300, 500, 200, 300, 450],
-        'month': [800, 1200, 1800, 2200, 1600, 2000, 2400]
+      // Navigation links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+          // Don't prevent default for actual page navigation
+          if (this.href && !this.href.includes('#')) {
+            // Allow normal navigation to other pages
+            return;
+          }
+
+          e.preventDefault();
+          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          showNotification(`Navigating to ${this.textContent.trim()}`);
+        });
+      });
+
+      // Quick action buttons
+      document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const action = this.querySelector('.action-text').textContent;
+          showNotification(`Initiating: ${action}`);
+
+          // Add visual feedback
+          this.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 150);
+        });
+      });
+
+      // Add loading animations
+      setTimeout(() => {
+        document.querySelectorAll('.loading').forEach(el => {
+          el.classList.remove('loading');
+        });
+      }, 500);
+    }
+
+    // Chart data updates
+    function updateChartData(range) {
+      const datasets = {
+        today: {
+          'AI Chat Sessions': [10, 25, 35, 45, 50, 60, 70],
+          'Wellness Check-ins': [5, 15, 25, 30, 35, 40, 45],
+          'Counselor Appointments': [2, 5, 8, 12, 15, 18, 20]
+        },
+        week: {
+          'AI Chat Sessions': [120, 190, 300, 500, 320, 280, 450],
+          'Wellness Check-ins': [80, 150, 200, 350, 240, 200, 320],
+          'Counselor Appointments': [30, 60, 80, 120, 90, 70, 110]
+        },
+        month: {
+          'AI Chat Sessions': [800, 1200, 1800, 2200, 1600, 2000, 2400],
+          'Wellness Check-ins': [500, 800, 1200, 1600, 1200, 1400, 1800],
+          'Counselor Appointments': [200, 400, 600, 800, 600, 700, 900]
+        }
       };
 
-      usageChart.data.datasets[0].data = newData[range] || newData['week'];
-      usageChart.update();
-    });
+      const data = datasets[range] || datasets.week;
+
+      window.usageChart.data.datasets.forEach((dataset, index) => {
+        const label = dataset.label;
+        if (data[label]) {
+          dataset.data = data[label];
+        }
+      });
+
+      window.usageChart.update('active');
+    }
 
     // Real-time updates simulation
     function simulateRealTimeUpdates() {
       setInterval(() => {
-        const activeUsers = document.getElementById('activeUsers');
-        const currentValue = parseInt(activeUsers.textContent.replace(',', ''));
+        // Update active users count
+        const activeUsersEl = document.getElementById('activeUsers');
+        const currentUsers = parseInt(activeUsersEl.textContent.replace(',', ''));
         const change = Math.floor(Math.random() * 20) - 10;
-        const newValue = Math.max(0, currentValue + change);
-        activeUsers.textContent = newValue.toLocaleString();
+        const newUsers = Math.max(1000, currentUsers + change);
 
-        activeUsers.style.transform = 'scale(1.05)';
+        activeUsersEl.textContent = newUsers.toLocaleString();
+
+        // Add pulse animation
+        activeUsersEl.style.transform = 'scale(1.1)';
+        activeUsersEl.style.color = '#667eea';
         setTimeout(() => {
-          activeUsers.style.transform = 'scale(1)';
-        }, 200);
-      }, 30000);
+          activeUsersEl.style.transform = 'scale(1)';
+          activeUsersEl.style.color = '';
+        }, 300);
+
+        // Randomly update crisis count
+        if (Math.random() < 0.3) {
+          const crisisEl = document.getElementById('crisisCount');
+          const currentCrisis = parseInt(crisisEl.textContent);
+          const newCrisis = Math.max(0, currentCrisis + (Math.random() > 0.7 ? 1 : -1));
+          crisisEl.textContent = newCrisis;
+
+          if (newCrisis > currentCrisis) {
+            showNotification('New crisis alert detected!', 'warning');
+          }
+        }
+      }, 15000);
     }
 
-    simulateRealTimeUpdates();
-
-    // Quick action handlers
-    document.querySelectorAll('.quick-action-btn').forEach(btn => {
-      btn.addEventListener('click', function (e) {
-        if (this.id !== 'takeSelfTest') {
-          e.preventDefault();
-          showNotification(`Action initiated: ${this.textContent.trim()}`);
-        }
-      });
-    });
-
-    function showNotification(message) {
+    // Notification system
+    function showNotification(message, type = 'info') {
       const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #7f56d9, #6941c6); /* Purple gradient */
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(127, 86, 217, 0.3); /* Purple shadow */
-        z-index: 1000;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-      `;
-      notification.textContent = message;
+      notification.className = 'notification';
+      notification.innerHTML = `
+                <i class="fa-solid fa-${type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+      if (type === 'warning') {
+        notification.style.background = 'var(--danger-gradient)';
+      }
 
       document.body.appendChild(notification);
 
-      setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-      }, 100);
+      // Show notification
+      setTimeout(() => notification.classList.add('show'), 100);
 
+      // Hide notification
       setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
+        notification.classList.remove('show');
         setTimeout(() => {
-          document.body.removeChild(notification);
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
         }, 300);
-      }, 3000);
+      }, 4000);
     }
+
+    // Initialize real-time updates
+    setTimeout(() => {
+      simulateRealTimeUpdates();
+    }, 3000);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key) {
+          case '1':
+            e.preventDefault();
+            document.querySelector('[data-range="today"]').click();
+            break;
+          case '2':
+            e.preventDefault();
+            document.querySelector('[data-range="week"]').click();
+            break;
+          case '3':
+            e.preventDefault();
+            document.querySelector('[data-range="month"]').click();
+            break;
+        }
+      }
+    });
+
+    // Progressive Web App features
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        // Service worker registration would go here in production
+        console.log('Dashboard ready for offline capabilities');
+      });
+    }
+
+    // Dashboard health check
+    function performHealthCheck() {
+      const healthItems = document.querySelectorAll('.health-status');
+      healthItems.forEach((item, index) => {
+        // Simulate occasional warnings
+        if (Math.random() < 0.1) {
+          item.textContent = 'Warning';
+          item.className = 'health-status status-warning';
+          setTimeout(() => {
+            const originalTexts = ['99.8%', 'Healthy', 'Secure', 'Active'];
+            item.textContent = originalTexts[index];
+            item.className = 'health-status status-online';
+          }, 5000);
+        }
+      });
+    }
+
+    // Run health check every 30 seconds
+    setInterval(performHealthCheck, 30000);
+
+    // Welcome message
+    setTimeout(() => {
+      showNotification('Welcome to SereneSpace Admin Dashboard! All systems operational.');
+    }, 1000);
   </script>
 </body>
 
