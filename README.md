@@ -1,62 +1,162 @@
-# 🌟 SereneSpace
+<div align="center">
+<br />
+<!-- You can add a logo here if you have one -->
+<!-- <img src="path/to/your/logo.png" alt="SereneSpace Logo" width="100"> -->
+<h1 align="center">🌟 SereneSpace 🌟</h1>
+<p align="center">
+A comprehensive mental wellness web application designed to support students in higher education.
+<br />
+<a href="https://www.google.com/search?q=https://serenespace-e5ev.onrender.com/"><strong>🚀 View Live Demo »</strong></a>
+<br />
+<br />
+</p>
+</div>
 
-**SereneSpace** is a comprehensive **mental wellness web application** designed to support students navigating the pressures of academic life.  
-It provides a **safe, anonymous, and personalized support system** to help break the stigma surrounding mental health.
+<!-- SHIELDS/BADGES -->
 
----
+<div align="center">
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python">
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Framework-Flask-green.svg" alt="Flask">
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Frontend-HTML_CSS_JS-orange.svg" alt="Frontend">
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+</div>
 
-## 📖 Description
-The platform's core principle is to **offer an anonymous user journey**, encouraging students to seek help without fear of judgment.  
-Users begin with a **mood check-in**, which generates a **personalized dashboard** with AI-curated recommendations tailored to the user's emotional state.  
-Built with **Python & Flask**, SereneSpace aims to create a healthier and more supportive academic environment.
+Smart India Hackathon 2025 Submission
+This project is the official submission for the Smart India Hackathon 2025 by Team The Peace Pals.
 
----
+Problem Statement ID: SIH25092
 
-## ✨ Key Features
-- 🔒 **Anonymous Access** — Use features without creating an account.  
-- 📊 **Personalized Dashboard** — Updates based on self-reported mood.  
-- 😊 **Mood Check-in** — Simple, non-judgmental mood selector.  
-- 🎮 **Interactive Activities** — Games, creative tools, and guided breathing.  
-- 🌐 **Multilingual AI Companion** — Chatbot in **English, Hindi, Urdu**.  
-- 🫂 **Safe Community** — Moderated anonymous peer forum.  
-- 👩‍⚕️ **Professional Support** — Paths to schedule counseling and helplines.  
-- 🛡️ **Admin Dashboard** — Anonymized analytics and alerts for institutions.
+Problem Statement Title: Development of a Digital Mental Health and Psychological Support System for Students in Higher Education
 
----
+Theme: MedTech / BioTech / Health Tech
 
-## 💻 Technology Stack
-**Backend:** Python, Flask, Werkzeug  
-**Frontend:** HTML5, CSS3, Vanilla JavaScript  
-**Templating:** Jinja2  
-**Libraries:** Chart.js, Font Awesome
+📖 About The Project
+SereneSpace is a safe, anonymous, and personalized mental wellness platform built to help students navigate the pressures of academic life. Our core principle is to offer an anonymous user journey, encouraging students to seek help without fear of judgment or stigma.
 
----
+Users begin with a simple mood check-in, which generates a personalized dashboard with AI-curated recommendations, activities, and resources tailored to their emotional state. Built with Python & Flask, SereneSpace aims to create a healthier, more supportive, and mentally resilient academic environment for students across India.
 
-## 🚀 Getting Started
+<!-- We recommend replacing this with a screenshot of your application's user interface! -->
 
-### Prerequisites
-- Python 3.x  
-- pip
+✨ Key Features
+🔒 Anonymous Access: Full access to core features without creating an account to ensure privacy.
 
-### Installation
-```bash
-git clone https://github.com/your-username/SereneSpace.git
+😊 Mood Check-in: A simple, non-judgmental interface to log daily emotional states.
+
+📊 Personalized Dashboard: The dashboard dynamically updates with resources and activities based on the user's reported mood.
+
+🎮 Interactive Activity Hub: A collection of stress-relief games, creative tools (like a drawing board), and guided breathing exercises.
+
+🌐 Multilingual AI Companion: An AI-powered chatbot providing first-aid support and coping strategies in English, Hindi, and Urdu.
+
+🫂 Safe Community Forum: A moderated, anonymous peer-to-peer forum for students to share experiences and support each other.
+
+👩‍⚕️ Professional Support Gateway: Clear and direct pathways to schedule appointments with campus counselors and access national emergency helplines.
+
+🛡️ Institutional Admin Dashboard: Provides colleges with anonymized, aggregate wellness data and crisis alerts to inform policy and enable timely interventions.
+
+💻 Built With
+Backend: Python, Flask
+
+Frontend: HTML5, CSS3, Vanilla JavaScript
+
+Templating: Jinja2
+
+AI/ML: Scikit-learn, TensorFlow (for sentiment analysis and crisis detection)
+
+Database: PostgreSQL, MongoDB
+
+Libraries: Chart.js, Font Awesome
+
+📂 Project Structure
+Here is a brief overview of the project's directory structure:
+
+/
+├── application.py         # Main Flask application file
+├── requirements.txt       # Project dependencies
+├── static/                # Contains CSS, JS, and image assets
+│   ├── css/
+│   ├── js/
+│   └── images/
+├── templates/             # HTML templates for the frontend
+│   ├── index.html
+│   └── ...
+└── README.md
+
+🚀 Getting Started
+To get a local copy up and running, follow these simple steps.
+
+Prerequisites
+Ensure you have Python 3.8+ and pip installed on your system.
+
+python --version
+
+Installation
+Clone the repository
+
+git clone [https://github.com/your-username/SereneSpace.git](https://github.com/your-username/SereneSpace.git)
 cd SereneSpace
-python -m venv venv
-# Activate:
-# Windows: venv\Scripts\activate
-# macOS/Linux: source venv/bin/activate
+
+Create and activate a virtual environment
+
+# Create the virtual environment
+python3 -m venv venv
+
+# Activate it
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+Install the required packages
+
 pip install -r requirements.txt
 
-If you don't have requirements.txt yet:
+Run the application
 
-pip install Flask
-pip freeze > requirements.txt
+python application.py
 
-Run the app
-python app.py
+Open your browser and navigate to http://127.0.0.1:5000.
 
+🗺️ Roadmap
+[ ] Peer-to-Peer Mentorship: Implement a structured feature to connect senior and junior students for guidance.
 
-Open: http://127.0.0.1:5000
+[ ] Expanded Language Support: Add support for more regional Indian languages in the UI and AI companion.
 
-Build out the peer-to-peer mentorship feature.
+[ ] Mobile App Development: Create native iOS and Android applications for better accessibility.
+[ ] Integration with University Systems: API integration for seamless and verified counselor booking.
+
+See the open issues for a full list of proposed features (and known issues).
+
+👥 Our Team
+Name
+
+Role
+
+GitHub Profile
+
+[Your Name]
+
+Team Lead / Backend
+
+[Link to your GitHub]
+
+[Teammate Name]
+
+Frontend Developer
+
+[Link to teammate's GitHub]
+
+[Teammate Name]
+
+UI/UX Designer
+
+[Link to teammate's GitHub]
+
+[Teammate Name]
+
+ML Engineer
+
+[Link to teammate's GitHub]
+
+📄 License
+Distributed under the MIT License. See LICENSE.txt for more information.
