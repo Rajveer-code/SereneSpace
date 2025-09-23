@@ -6,7 +6,7 @@
 <p align="center">
 A comprehensive mental wellness web application designed to support students in higher education.
 <br />
-<a href="https://www.google.com/search?q=https://serenespace-e5ev.onrender.com/"><strong>🚀 View Live Demo »</strong></a>
+<a href="https://serenespace-e5ev.onrender.com/"><strong>🚀 View Live Demo »</strong></a>
 <br />
 <br />
 </p>
