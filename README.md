@@ -123,40 +123,10 @@ Open your browser and navigate to http://127.0.0.1:5000.
 [ ] Expanded Language Support: Add support for more regional Indian languages in the UI and AI companion.
 
 [ ] Mobile App Development: Create native iOS and Android applications for better accessibility.
+
 [ ] Integration with University Systems: API integration for seamless and verified counselor booking.
 
 See the open issues for a full list of proposed features (and known issues).
-
-👥 Our Team
-Name
-
-Role
-
-GitHub Profile
-
-[Your Name]
-
-Team Lead / Backend
-
-[Link to your GitHub]
-
-[Teammate Name]
-
-Frontend Developer
-
-[Link to teammate's GitHub]
-
-[Teammate Name]
-
-UI/UX Designer
-
-[Link to teammate's GitHub]
-
-[Teammate Name]
-
-ML Engineer
-
-[Link to teammate's GitHub]
 
 📄 License
 Distributed under the MIT License. See LICENSE.txt for more information.
