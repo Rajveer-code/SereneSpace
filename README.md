@@ -1,132 +1,276 @@
 <div align="center">
-<br />
-<!-- You can add a logo here if you have one -->
-<!-- <img src="path/to/your/logo.png" alt="SereneSpace Logo" width="100"> -->
-<h1 align="center">🌟 SereneSpace 🌟</h1>
-<p align="center">
-A comprehensive mental wellness web application designed to support students in higher education.
-<br />
-<a href="https://serenespace-e5ev.onrender.com/"><strong>🚀 View Live Demo »</strong></a>
-<br />
-<br />
-</p>
+
+<h1>🌿 SereneSpace</h1>
+
+<p><strong>An anonymous mental wellness platform built for students who aren't ready to ask for help out loud</strong></p>
+
+<a href="https://serenespace-e5ev.onrender.com/">
+  <img src="https://img.shields.io/badge/🚀_Live_Demo-Visit_App-6B73FF?style=for-the-badge" alt="Live Demo">
+</a>
+
+<br/><br/>
+
+<img src="https://img.shields.io/badge/Python-3.10-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+<img src="https://img.shields.io/badge/Flask-3.1-000000?style=flat-square&logo=flask&logoColor=white" alt="Flask">
+<img src="https://img.shields.io/badge/Frontend-HTML_CSS_JS-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="Frontend">
+<img src="https://img.shields.io/badge/Deployed_on-Render-46E3B7?style=flat-square&logo=render&logoColor=white" alt="Render">
+<img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License">
+
+<br/><br/>
+
+<img src="https://img.shields.io/badge/SIH_2025-Selected_(50_of_250_Teams)-764ba2?style=flat-square" alt="SIH 2025">
+<img src="https://img.shields.io/badge/Problem_ID-SIH25092-667eea?style=flat-square" alt="Problem Statement ID">
+<img src="https://img.shields.io/badge/Theme-MedTech_/_Health_Tech-9BF0E1?style=flat-square" alt="Theme">
+
 </div>
 
-<!-- SHIELDS/BADGES -->
+---
 
-<div align="center">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Framework-Flask-green.svg" alt="Flask">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Frontend-HTML_CSS_JS-orange.svg" alt="Frontend">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
-</div>
+## Overview
 
-Smart India Hackathon 2025 Submission
-This project is the official submission for the Smart India Hackathon 2025 by Team The Peace Pals.
+SereneSpace is a web application built to close the gap between a student in distress and the support they need. The core premise is simple: no account, no login, no judgment. A student can open the app, check in with how they're feeling, and immediately reach tools, peer communities, or a professional — all without identifying themselves.
 
-Problem Statement ID: SIH25092
+Mental health infrastructure at Indian colleges exists in theory. In practice, most students never use it. The stigma around seeking help, the fear of being seen walking into a counselor's office, and the inaccessibility of resources after hours mean most students silently manage distress alone. SereneSpace was built to address that reality directly.
 
-Problem Statement Title: Development of a Digital Mental Health and Psychological Support System for Students in Higher Education
+> 🌐 **[Try the live application here →](https://serenespace-e5ev.onrender.com/)**
 
-Theme: MedTech / BioTech / Health Tech
+---
 
-📖 About The Project
-SereneSpace is a safe, anonymous, and personalized mental wellness platform built to help students navigate the pressures of academic life. Our core principle is to offer an anonymous user journey, encouraging students to seek help without fear of judgment or stigma.
+## The Problem
 
-Users begin with a simple mood check-in, which generates a personalized dashboard with AI-curated recommendations, activities, and resources tailored to their emotional state. Built with Python & Flask, SereneSpace aims to create a healthier, more supportive, and mentally resilient academic environment for students across India.
+The issue isn't the absence of mental health resources at universities — it's the absence of **accessible, private, and immediate** ones.
 
-<!-- We recommend replacing this with a screenshot of your application's user interface! -->
+A student dealing with exam pressure, loneliness, or academic failure faces a system that asks them to:
 
-✨ Key Features
-🔒 Anonymous Access: Full access to core features without creating an account to ensure privacy.
+- Identify themselves
+- Make an appointment days in advance
+- Walk into an office during working hours
+- Explain their situation to a stranger in person
 
-😊 Mood Check-in: A simple, non-judgmental interface to log daily emotional states.
+For most students, that chain of steps is too much. They never take the first one. Problems that were manageable early become serious over time — and by the time they do reach a counselor, they're often already in crisis.
 
-📊 Personalized Dashboard: The dashboard dynamically updates with resources and activities based on the user's reported mood.
+---
 
-🎮 Interactive Activity Hub: A collection of stress-relief games, creative tools (like a drawing board), and guided breathing exercises.
+## What We Built
 
-🌐 Multilingual AI Companion: An AI-powered chatbot providing first-aid support and coping strategies in English, Hindi, and Urdu.
+SereneSpace removes the friction entirely. A student visits the platform, picks a mood from a simple check-in screen, and lands on a dashboard personalized to how they're feeling right now. From there, they can:
 
-🫂 Safe Community Forum: A moderated, anonymous peer-to-peer forum for students to share experiences and support each other.
+- Use self-help tools: breathing exercises, a drawing board, games, and journaling
+- Take a structured wellness assessment and get tiered recommendations
+- Talk to an AI companion trained on mental health coping strategies
+- Join anonymous peer forums organized around shared experiences
+- Connect with a real counselor through chat, call, or video — when they're ready
+- Reach emergency helplines instantly, with zero login required
 
-👩‍⚕️ Professional Support Gateway: Clear and direct pathways to schedule appointments with campus counselors and access national emergency helplines.
+On the institutional side, an **admin dashboard** gives college counselors aggregated, anonymized insight into campus wellness trends — enabling proactive outreach rather than waiting for a crisis to surface.
 
-🛡️ Institutional Admin Dashboard: Provides colleges with anonymized, aggregate wellness data and crisis alerts to inform policy and enable timely interventions.
+---
 
-💻 Built With
-Backend: Python, Flask
+## Key Features
 
-Frontend: HTML5, CSS3, Vanilla JavaScript
+| Feature | Description |
+|---|---|
+| 🔒 **Anonymous Access** | Full platform access without any account — session-based identity only |
+| 😌 **Mood Check-in** | Five emotional states captured at entry, driving the entire personalized flow |
+| 📋 **Wellness Assessment** | PHQ-9 style 10-question self-evaluation with automatic scoring and recommendations |
+| 🤖 **AI Companion** | Keyword-aware chat with mental health responses; crisis escalation built in |
+| 🎮 **Activity Hub** | Canvas drawing board, breathing exercise timer, memory game, guided journaling |
+| 🌐 **Multilingual Support** | Language selector with English, Hindi, and Urdu in the AI companion |
+| 🫂 **Peer Community** | Anonymous moderated group forums organized by theme (exam stress, sleep, motivation) |
+| 👩‍⚕️ **Professional Pathways** | Direct routes to live chat support, scheduled calls, and video counseling |
+| 🚨 **Emergency Page** | Always accessible — no session required; national helplines with click-to-call |
+| 🛡️ **Admin Dashboard** | Chart.js visualizations of mood trends, usage data, and crisis frequency |
 
-Templating: Jinja2
+---
 
-AI/ML: Scikit-learn, TensorFlow (for sentiment analysis and crisis detection)
+## System Architecture
 
-Database: PostgreSQL, MongoDB
+The application uses a straightforward server-rendered architecture with Flask at the center.
+```
+Browser
+   │
+   ▼
+Flask Routes (application.py)
+   │
+   ├──► Session Store (Flask signed cookies)
+   │         │
+   │         ▼
+   │    [mood] ──► [dashboard] ──► [assessment / activities / chat / community / counseling]
+   │
+   └──► Admin Route ──► [admin_dashboard] (separate session guard)
+            │
+            ▼
+       Chart.js Visualizations
+```
 
-Libraries: Chart.js, Font Awesome
+**How the user flow works:**
 
-📂 Project Structure
-Here is a brief overview of the project's directory structure:
+1. Student lands on `welcome.html` → clicks "Get Started"
+2. Mood check-in page captures emotional state via a `POST` request → stored in Flask session
+3. `session['user'] = 'Anonymous'` is set, unlocking all protected routes without any identity
+4. Dashboard renders dynamically using stored mood and any prior assessment data
+5. Assessment responses are submitted as JSON, scored server-side, stored in session
+6. Results page reads from session — no database round-trip needed
+7. Emergency page is intentionally excluded from all session guards so it's always reachable
 
-/
-├── application.py         # Main Flask application file
-├── requirements.txt       # Project dependencies
-├── static/                # Contains CSS, JS, and image assets
-│   ├── css/
-│   ├── js/
-│   └── images/
-├── templates/             # HTML templates for the frontend
-│   ├── index.html
-│   └── ...
-└── README.md
+**Key design decision:** The entire current implementation is stateless by design — no database, all state in Flask sessions. This made deployment fast and the codebase portable, at the cost of persistence across sessions (a deliberate trade-off for the prototype stage).
 
-🚀 Getting Started
-To get a local copy up and running, follow these simple steps.
+---
 
-Prerequisites
-Ensure you have Python 3.8+ and pip installed on your system.
+## Tech Stack
 
-python --version
+**Backend**
+- Python 3.10
+- Flask 3.1
+- Flask-SocketIO 5.5 — real-time community chat
+- Gunicorn — production WSGI server
 
-Installation
-Clone the repository
+**Frontend**
+- HTML5, CSS3, Vanilla JavaScript
+- Jinja2 templating
+- Chart.js — admin dashboard visualizations
+- Font Awesome 6 — iconography
+- Google Fonts (Inter, Poppins)
 
-git clone [https://github.com/your-username/SereneSpace.git](https://github.com/your-username/SereneSpace.git)
+**Deployment**
+- **Render** (live) — [serenespace-e5ev.onrender.com](https://serenespace-e5ev.onrender.com/)
+- AWS Elastic Beanstalk-compatible (`application.py` naming convention followed)
+
+---
+
+## Implementation Highlights
+
+**Anonymous session management**  
+The platform tracks mood, assessment results, and journey state without any registration. Flask's signed cookie sessions handle this entirely. Setting `session['user'] = 'Anonymous'` on the mood check-in page serves as the session passport for every downstream route — clean, zero-friction, and privacy-preserving.
+
+**Multi-step assessment with client-side scoring**  
+The wellness assessment is a single-page multi-step form driven by vanilla JS. Each question renders in place, the progress bar updates on every navigation step, and the final PHQ-9 style score is computed client-side before being sent to the server as JSON. Results are categorized into three tiers (low / moderate / high concern) with matched recommendation sets.
+
+**Breathing exercise phase engine**  
+The breathing exercise supports two patterns (4-7-8 and box breathing) through a JS phase-sequencer that drives both the CSS circle expand/contract animation and the instruction label simultaneously. Keeping both in sync across different pattern durations required programmatically resetting and restarting the CSS animation on each phase transition rather than relying on a single looping keyframe — otherwise the visual and the text would drift out of sync after the first cycle.
+
+**Crisis escalation in AI chat**  
+The AI companion scans incoming messages against a set of crisis keywords. On detection, it immediately surfaces emergency contact options and prompts the user toward the emergency page — prioritizing safety over conversational flow. This is intentionally simple and fast; the goal is redirection, not engagement.
+
+**HTML5 Canvas drawing board**  
+The activity hub includes a freehand drawing board built on the Canvas API. Mouse and touch event listeners track pointer movement, and brush color and size are adjustable in real time. It was included specifically as a non-verbal outlet — there's consistent evidence that unstructured creative activity helps regulate stress responses.
+
+---
+
+## SIH 2025 Context
+
+This project was submitted to **Smart India Hackathon 2025** as the official entry from **Team The Peace Pals**.
+
+- **Problem Statement:** SIH25092 — Development of a Digital Mental Health and Psychological Support System for Students in Higher Education
+- **Theme:** MedTech / BioTech / Health Tech
+
+At the college-level screening round, approximately **250 teams submitted proposals**. After evaluation on problem understanding, solution design, and technical viability — which included a written submission and a live presentation and Q&A round with judges — our team was among the **50 teams selected to advance**.
+
+---
+
+## Results
+
+What the system currently produces:
+
+- A personalized resource dashboard from a single mood input, with no sign-up required
+- A tiered wellness report after assessment with matched coping strategies
+- A real-time conversation log from the AI companion with built-in crisis escalation
+- A full activity session — breathing, drawing, journaling, or games — with completion tracking
+- For administrators: mood distribution charts, feature engagement breakdowns, and crisis frequency metrics over time
+
+---
+
+## Future Scope
+
+**Optional pseudonymous accounts**  
+The anonymous model is right for first contact. Voluntary pseudonymous accounts would allow mood and assessment trends to be tracked over time — surfacing students whose wellbeing has been gradually declining over weeks, not just those in acute crisis.
+
+**Fine-tuned language model for the AI companion**  
+The current keyword-matching system works but has obvious limits. Replacing it with a small model fine-tuned on mental health counseling dialogue would make responses substantially more contextual and useful, especially for nuanced or indirect expressions of distress.
+
+**University scheduling API integration**  
+The counseling page currently shows static availability data. Connecting to a university's scheduling system via API would make the booking flow real — same-day slots, calendar sync, confirmation messages.
+
+**Full UI localization for regional Indian languages**  
+The AI companion already has Hindi and Urdu language stubs. Extending full UI localization to cover the top 6 Indian languages would significantly improve accessibility for first-generation college students and students from non-English-medium backgrounds.
+
+**Progressive Web App with opt-in check-in reminders**  
+A lightweight PWA wrapper would enable push notifications — gentle, optional prompts for students who haven't checked in for several days, enabling early-stage outreach before a difficult week becomes a serious problem.
+
+---
+
+## Getting Started
+
+**Prerequisites:** Python 3.8+, pip
+```bash
+# Clone the repository
+git clone https://github.com/your-username/SereneSpace.git
 cd SereneSpace
 
-Create and activate a virtual environment
-
-# Create the virtual environment
+# Create and activate a virtual environment
 python3 -m venv venv
+source venv/bin/activate       # macOS / Linux
+venv\Scripts\activate          # Windows
 
-# Activate it
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-Install the required packages
-
+# Install dependencies
 pip install -r requirements.txt
 
-Run the application
-
+# Run the application
 python application.py
+```
 
-Open your browser and navigate to http://127.0.0.1:5000.
+Open `http://127.0.0.1:5000` in your browser.
 
-🗺️ Roadmap
-[ ] Peer-to-Peer Mentorship: Implement a structured feature to connect senior and junior students for guidance.
+**Admin access:** navigate to `/login`
+```
+Username: admin
+Password: 123
+```
 
-[ ] Expanded Language Support: Add support for more regional Indian languages in the UI and AI companion.
+---
 
-[ ] Mobile App Development: Create native iOS and Android applications for better accessibility.
+## Project Structure
+```
+SereneSpace/
+│
+├── application.py              # All Flask routes and application logic
+├── requirements.txt            # Python dependencies
+│
+├── static/
+│   └── style.css               # Global design system — variables, components, layout
+│
+└── templates/
+    ├── welcome.html             # Landing page and entry point
+    ├── login.html               # Admin-only authentication
+    ├── mood_checkin.html        # Anonymous entry — mood selection
+    ├── dashboard.html           # Personalized hub built from session mood data
+    ├── assessment.html          # Multi-step wellness self-assessment
+    ├── assessment_results.html  # Scored results with tiered recommendations
+    ├── activity_gamespage.html  # Activity hub — games, canvas drawing, journaling
+    ├── breathing_exercise.html  # Guided breathing with animated phase timer
+    ├── ai_chat.html             # AI companion with crisis escalation
+    ├── community.html           # Anonymous peer forums and group chat
+    ├── counseling.html          # Professional support pathways
+    ├── emergency.html           # Crisis page — always accessible, no session required
+    └── admin_dashboard.html     # Institutional analytics and wellness overview
+```
 
-[ ] Integration with University Systems: API integration for seamless and verified counselor booking.
+---
 
-See the open issues for a full list of proposed features (and known issues).
+## License
 
-📄 License
-Distributed under the MIT License. See LICENSE.txt for more information.
+Distributed under the MIT License.
+
+---
+
+<div align="center">
+
+Mental health support fails students not because institutions don't care, but because the systems weren't designed around how students actually behave when they're struggling. SereneSpace started from that observation. The goal was to make the first step toward help require as little courage as possible.
+
+It's a working prototype. There's meaningful engineering still to do. But the core idea is right.
+
+<br/>
+
+**[🌐 View the live application](https://serenespace-e5ev.onrender.com/)** · Built for SIH 2025 by Team The Peace Pals
+
+</div>
